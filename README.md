@@ -4,4 +4,4 @@ Creates a new Basic and a new Cloze Note Type that support Markdown and KaTeX
 ![](https://github.com/Jwrede/Anki-KaTeX-Markdown/blob/main/example.gif)
 
 ## Installation
-Go to <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Anki-icon.svg/1024px-Anki-icon.svg.png" width="100">
+Go to <img src="https://preview.redd.it/fka0b5cc48t41.png?auto=webp&s=c26da98dca2863e1d0dddbfd59b5bea6165f4bcb" width="100">
