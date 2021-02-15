@@ -106,10 +106,10 @@ front = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
-		str = str.replace(/<br\s*[\/]?>/gi, "\n");
+		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/<div>/g, "\n");
-		return str.replace(/<\/div>/g, "\n");
+		str = str.replace(/<div>/g, "\\n");
+		return str.replace(/<\/div>/g, "\\n");
 	}
 	run();
 </script>
@@ -169,10 +169,10 @@ back = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
-		str = str.replace(/<br\s*[\/]?>/gi, "\n");
+		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/<div>/g, "\n");
-		return str.replace(/<\/div>/g, "\n");
+		str = str.replace(/<div>/g, "\\n");
+		return str.replace(/<\/div>/g, "\\n");
 	}
 	run();
 </script>
@@ -225,11 +225,11 @@ front_cloze = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
-		str = str.replace(/<br\s*[\/]?>/gi, "\n");
+		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/<div>/g, "\n");
-		str = str.replace(/<span[^>]*>/gi, " ");
-		return str.replace(/<\/div>/g, "\n");
+		str = str.replace(/<div>/g, "\\n");
+		str = str.replace(/<span[^>]*>/gi, "");
+		return str.replace(/<\/div>/g, "\\n");
 	}
 	run();
 </script>
@@ -286,11 +286,11 @@ back_cloze = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
-		str = str.replace(/<br\s*[\/]?>/gi, "\n");
+		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/<div>/g, "\n");
+		str = str.replace(/<div>/g, "\\n");
 		str = str.replace(/<span[^>]*>/gi, "");
-		return str.replace(/<\/div>/g, "");
+		return str.replace(/<\/div>/g, "\\n");
 	}
 	run();
 </script>
