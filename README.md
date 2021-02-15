@@ -14,7 +14,7 @@ Creates a new Basic and a new Cloze Note Type that support Markdown and KaTeX
 
 ## Used Libraries
 <a href="https://github.com/markdown-it/markdown-it">Markdown-It</a>  
-<a href="https://github.com/KaTeX/KaTeX">Markdown-It</a>
+<a href="https://github.com/KaTeX/KaTeX">KaTeX</a>
 
 ## Installation
 * Go to 
