@@ -13,8 +13,8 @@ Creates a new Basic and a new Cloze Note Type that support Markdown and KaTeX
 </ul>
 
 ## Used Libraries
-<a href="https://github.com/markdown-it/markdown-it" target="_blank">Markdown-It</a>
-<a href="https://github.com/markdown-it/markdown-it">Markdown-It</a>
+<a href="https://github.com/markdown-it/markdown-it" target="_blank">Markdown-It</a>  
+<a href="https://github.com/KaTeX/KaTeX" target="_blank">Markdown-It</a>
 
 ## Installation
 * Go to 
