@@ -63,32 +63,25 @@ front = """
 <div id="front">{{Front}}</div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js" integrity="sha512-0DkA2RqFvfXBVeti0R1l0E8oMkmY0X+bAA2i02Ld8xhpjpvqORUcE/UBe+0KOPzi5iNah0aBpW6uaNNrqCk73Q==" crossorigin="anonymous"></script>
 <script>
-	let interval;
-	
-	function waitForScripts () {
-		return new Promise( resolve => {
-			interval = setInterval(() => {
-				let to_load = typeof katex !== 'undefined' &&
-						  typeof renderMathInElement !== 'undefined' &&
-						  typeof window.markdownit !== 'undefined' &&
-						  typeof document.getElementById("front").innerHTML !== 'undefined'
-				if(to_load) {
-					resolve();
-				}
-			}, 10);
-		});
+	let katex = document.createElement('script');
+	katex.onload = function() {
+		let katex_auto_loader = document.createElement('script');
+		katex_auto_loader.onload = function() {
+			let markdownIt = document.createElement('script');
+			markdownIt.onload = function() {
+				renderMath("front");
+				markdown("front");
+			}
+			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
+			document.head.appendChild(markdownIt);
+		}
+		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
+		document.head.appendChild(katex_auto_loader);
 	}
-	async function run() {
-		await waitForScripts();
-		clearInterval(interval);
+	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
+	document.head.appendChild(katex);
 
-		renderMath("front");
-		markdown("front");
-	}
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
@@ -111,7 +104,6 @@ front = """
 		str = str.replace(/<div>/g, "\\n");
 		return str.replace(/<\/div>/g, "\\n");
 	}
-	run();
 </script>
 """
 
@@ -123,35 +115,27 @@ back = """
 <div id="back">{{Back}}</div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js" integrity="sha512-0DkA2RqFvfXBVeti0R1l0E8oMkmY0X+bAA2i02Ld8xhpjpvqORUcE/UBe+0KOPzi5iNah0aBpW6uaNNrqCk73Q==" crossorigin="anonymous"></script>
 <script>
-	let interval;
-	
-	function waitForScripts () {
-		return new Promise( resolve => {
-			interval = setInterval(() => {
-				let to_load = typeof katex !== 'undefined' &&
-						  typeof renderMathInElement !== 'undefined' &&
-						  typeof window.markdownit !== 'undefined' &&
-						  typeof document.getElementById("front").innerHTML !== 'undefined' &&
-						  typeof document.getElementById("back").innerHTML !== 'undefined'
-				if(to_load) {
-					resolve();
-				}
-			}, 10);
-		});
+	let katex = document.createElement('script');
+	katex.onload = function() {
+		let katex_auto_loader = document.createElement('script');
+		katex_auto_loader.onload = function() {
+			let markdownIt = document.createElement('script');
+			markdownIt.onload = function() {
+				renderMath("front");
+				markdown("front");
+				renderMath("back");
+				markdown("back");
+			}
+			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
+			document.head.appendChild(markdownIt);
+		}
+		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
+		document.head.appendChild(katex_auto_loader);
 	}
-	async function run() {
-		await waitForScripts();
-		clearInterval(interval);
+	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
+	document.head.appendChild(katex);
 
-		renderMath("front");
-		renderMath("back");
-		markdown("front");
-		markdown("back");
-	}
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
@@ -174,7 +158,6 @@ back = """
 		str = str.replace(/<div>/g, "\\n");
 		return str.replace(/<\/div>/g, "\\n");
 	}
-	run();
 </script>
 """
 
@@ -182,32 +165,25 @@ front_cloze = """
 <div id="front">{{cloze:Text}}</div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js" integrity="sha512-0DkA2RqFvfXBVeti0R1l0E8oMkmY0X+bAA2i02Ld8xhpjpvqORUcE/UBe+0KOPzi5iNah0aBpW6uaNNrqCk73Q==" crossorigin="anonymous"></script>
 <script>
-	let interval;
-	
-	function waitForScripts () {
-		return new Promise( resolve => {
-			interval = setInterval(() => {
-				let to_load = typeof katex !== 'undefined' &&
-						  typeof renderMathInElement !== 'undefined' &&
-						  typeof window.markdownit !== 'undefined' &&
-						  typeof document.getElementById("front").innerHTML !== 'undefined'
-				if(to_load) {
-					resolve();
-				}
-			}, 10);
-		});
+	let katex = document.createElement('script');
+	katex.onload = function() {
+		let katex_auto_loader = document.createElement('script');
+		katex_auto_loader.onload = function() {
+			let markdownIt = document.createElement('script');
+			markdownIt.onload = function() {
+				renderMath("front");
+				markdown("front");
+			}
+			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
+			document.head.appendChild(markdownIt);
+		}
+		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
+		document.head.appendChild(katex_auto_loader);
 	}
-	async function run() {
-		await waitForScripts();
-		clearInterval(interval);
+	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
+	document.head.appendChild(katex);
 
-		renderMath("front");
-		markdown("front");
-	}
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
@@ -231,7 +207,6 @@ front_cloze = """
 		str = str.replace(/<span[^>]*>/gi, "");
 		return str.replace(/<\/div>/g, "\\n");
 	}
-	run();
 </script>
 """
 
@@ -240,35 +215,27 @@ back_cloze = """
 <div id="extra">{{Back Extra}}</div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js" integrity="sha512-0DkA2RqFvfXBVeti0R1l0E8oMkmY0X+bAA2i02Ld8xhpjpvqORUcE/UBe+0KOPzi5iNah0aBpW6uaNNrqCk73Q==" crossorigin="anonymous"></script>
 <script>
-	let interval;
-	
-	function waitForScripts () {
-		return new Promise( resolve => {
-			interval = setInterval(() => {
-				let to_load =typeof katex !== 'undefined' &&
-						  typeof renderMathInElement !== 'undefined' &&
-						  typeof window.markdownit !== 'undefined' &&
-						  typeof document.getElementById("back").innerHTML !== 'undefined' &&
-						  typeof document.getElementById("extra").innerHTML !== 'undefined'
-				if(to_load) {
-					resolve();
-				}
-			}, 10);
-		});
+	let katex = document.createElement('script');
+	katex.onload = function() {
+		let katex_auto_loader = document.createElement('script');
+		katex_auto_loader.onload = function() {
+			let markdownIt = document.createElement('script');
+			markdownIt.onload = function() {
+				renderMath("back");
+				markdown("back");
+				renderMath("extra");
+				markdown("extra");
+			}
+			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
+			document.head.appendChild(markdownIt);
+		}
+		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
+		document.head.appendChild(katex_auto_loader);
 	}
-	async function run() {
-		await waitForScripts();
-		clearInterval(interval);
+	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
+	document.head.appendChild(katex);
 
-		renderMath("back");
-		markdown("back");
-		renderMath("extra");
-		markdown("extra");
-	}
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
@@ -292,7 +259,6 @@ back_cloze = """
 		str = str.replace(/<span[^>]*>/gi, "");
 		return str.replace(/<\/div>/g, "\\n");
 	}
-	run();
 </script>
 """
 
