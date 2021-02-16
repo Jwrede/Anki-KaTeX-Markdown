@@ -72,6 +72,7 @@ front = """
 			markdownIt.onload = function() {
 				renderMath("front");
 				markdown("front");
+				document.getElementById("front").style.visibility = "visible ";
 			}
 			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
 			document.head.appendChild(markdownIt);
@@ -126,6 +127,8 @@ back = """
 				markdown("front");
 				renderMath("back");
 				markdown("back");
+				document.getElementById("front").style.visibility = "visible ";
+				document.getElementById("back").style.visibility = "visible ";
 			}
 			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
 			document.head.appendChild(markdownIt);
@@ -174,6 +177,7 @@ front_cloze = """
 			markdownIt.onload = function() {
 				renderMath("front");
 				markdown("front");
+				document.getElementById("front").style.visibility = "visible ";
 			}
 			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
 			document.head.appendChild(markdownIt);
@@ -226,6 +230,8 @@ back_cloze = """
 				markdown("back");
 				renderMath("extra");
 				markdown("extra");
+				document.getElementById("back").style.visibility = "visible ";
+				document.getElementById("extra").style.visibility = "visible ";
 			}
 			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
 			document.head.appendChild(markdownIt);
@@ -263,7 +269,6 @@ back_cloze = """
 """
 
 css = """
-
 .card {
   font-family: arial;
   font-size: 20px;
@@ -289,5 +294,8 @@ code {
     padding: 1em 1.5em;
     display: block;
     word-wrap: break-word;
+}
+#front, #back, #extra {
+	visibility: hidden;
 }
 """
