@@ -1,18 +1,32 @@
 from aqt import mw
+from aqt.utils import showInfo
 from anki.hooks import addHook
 import anki
 
-MODEL_NAME = "KaTeX and Markdown"
-
+MODEL_NAME = 'KaTeX and Markdown'
+VERSION = 0.2
+CONF = { 'version': VERSION }
+CONF_NAME = 'MDKATEX'
 
 def create_model_if_necessacy():
     model = mw.col.models.byName(MODEL_NAME + " Basic")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
+    m = mw.col.models
 
     if not model:
         create_model()
     if not model_cloze:
         create_model_cloze()
+        
+    if CONF_NAME not in mw.col.conf:
+        mw.col.conf[CONF_NAME] = CONF
+        # Because I added the Versionmanager in v0.2
+        updateTemplates()
+    else:
+        if mw.col.conf[CONF_NAME]['version'] < CONF['version']:
+            update_templates()
+            mw.col.conf[CONF_NAME] = CONF
+
 
 
 def create_model():
@@ -54,12 +68,27 @@ def create_model_cloze():
     m.addTemplate(model, template)
     m.add(model)
     m.save(model)
+    
+def update_templates():
+    model = mw.col.models.byName(MODEL_NAME + " Basic")
+    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
+
+    model['tmpls'][0]['qfmt'] = front
+    model['tmpls'][0]['afmt'] = back
+    model['tmpls'][0]['css'] = css
+
+    model_cloze['tmpls'][0]['qfmt'] = front_cloze
+    model_cloze['tmpls'][0]['afmt'] = back_cloze
+    model_cloze['tmpls'][0]['css'] = css
+
+    mw.col.models.save(model)
+    mw.col.models.save(model_cloze)
 
 
 addHook("profileLoaded", create_model_if_necessacy)
 
-
 front = """
+a
 <div id="front">{{Front}}</div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
@@ -102,6 +131,7 @@ front = """
 	function replaceInString(str) {
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
+		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		return str.replace(/<\/div>/g, "\\n");
 	}
@@ -158,6 +188,7 @@ back = """
 	function replaceInString(str) {
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
+		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		return str.replace(/<\/div>/g, "\\n");
 	}
@@ -207,6 +238,7 @@ front_cloze = """
 	function replaceInString(str) {
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
+		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		str = str.replace(/<span[^>]*>/gi, "");
 		return str.replace(/<\/div>/g, "\\n");
@@ -261,6 +293,7 @@ back_cloze = """
 	function replaceInString(str) {
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
+		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		str = str.replace(/<span[^>]*>/gi, "");
 		return str.replace(/<\/div>/g, "\\n");
