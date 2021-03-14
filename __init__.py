@@ -2,9 +2,10 @@ from aqt import mw
 from aqt.utils import showInfo
 from anki.hooks import addHook
 import anki
+import os, shutil
 
 MODEL_NAME = 'KaTeX and Markdown'
-VERSION = 0.2
+VERSION = 1.0
 CONF = { 'version': VERSION }
 CONF_NAME = 'MDKATEX'
 
@@ -27,6 +28,11 @@ def create_model_if_necessacy():
             update_templates()
             mw.col.conf[CONF_NAME] = CONF
 
+    if not os.path.isdir(os.path.join(mw.col.media.dir(), "_katex")):
+        shutil.copytree(os.path.join(os.path.dirname(os.path.realpath(__file__)), "_katex"), os.path.join(mw.col.media.dir(), "_katex"))
+
+    if not os.path.isdir(os.path.join(mw.col.media.dir(), "_markdown-it")):
+        shutil.copytree(os.path.join(os.path.dirname(os.path.realpath(__file__)), "_markdown-it"), os.path.join(mw.col.media.dir(), "_markdown-it"))
 
 
 def create_model():
@@ -88,29 +94,41 @@ def update_templates():
 addHook("profileLoaded", create_model_if_necessacy)
 
 front = """
-a
 <div id="front">{{Front}}</div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let katex = document.createElement('script');
-	katex.onload = function() {
-		let katex_auto_loader = document.createElement('script');
-		katex_auto_loader.onload = function() {
-			let markdownIt = document.createElement('script');
-			markdownIt.onload = function() {
-				renderMath("front");
-				markdown("front");
-				document.getElementById("front").style.visibility = "visible ";
+	let getScripts = [
+		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+	]
+	
+	Promise.all(getScripts).then(() => render());
+	
+
+	function getScript(path, altURL) {
+		return new Promise(resolve => {
+			let script = document.createElement('script');
+			script.onload = () => resolve();
+			script.onerror = function() {
+				let script_online = document.createElement('script');
+				script_online.onload = () => resolve();
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
 			}
-			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
-			document.head.appendChild(markdownIt);
-		}
-		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
-		document.head.appendChild(katex_auto_loader);
+			script.src = path;
+			document.head.appendChild(script);
+		})
 	}
-	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
-	document.head.appendChild(katex);
+
+
+	function render() {
+		renderMath("front");
+		markdown("front");
+		document.getElementById("front").style.visibility = "visible ";
+	}
+
 
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -133,41 +151,57 @@ a
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
 """
 
 back = """
+
 <div id="front">{{Front}}</div>
 
 <hr id=answer>
 
 <div id="back">{{Back}}</div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let katex = document.createElement('script');
-	katex.onload = function() {
-		let katex_auto_loader = document.createElement('script');
-		katex_auto_loader.onload = function() {
-			let markdownIt = document.createElement('script');
-			markdownIt.onload = function() {
-				renderMath("front");
-				markdown("front");
-				renderMath("back");
-				markdown("back");
-				document.getElementById("front").style.visibility = "visible ";
-				document.getElementById("back").style.visibility = "visible ";
+	let getScripts = [
+		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+	]
+	
+	Promise.all(getScripts).then(() => render());
+	
+
+	function getScript(path, altURL) {
+		return new Promise(resolve => {
+			let script = document.createElement('script');
+			script.onload = () => resolve();
+			script.onerror = function() {
+				let script_online = document.createElement('script');
+				script_online.onload = () => resolve();
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
 			}
-			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
-			document.head.appendChild(markdownIt);
-		}
-		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
-		document.head.appendChild(katex_auto_loader);
+			script.src = path;
+			document.head.appendChild(script);
+		})
 	}
-	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
-	document.head.appendChild(katex);
+
+
+	function render() {
+		renderMath("front");
+		markdown("front");
+		renderMath("back");
+		markdown("back");
+		document.getElementById("front").style.visibility = "visible ";
+		document.getElementById("back").style.visibility = "visible ";
+	}
+
 
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -190,34 +224,50 @@ back = """
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
 """
 
 front_cloze = """
+
 <div id="front">{{cloze:Text}}</div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let katex = document.createElement('script');
-	katex.onload = function() {
-		let katex_auto_loader = document.createElement('script');
-		katex_auto_loader.onload = function() {
-			let markdownIt = document.createElement('script');
-			markdownIt.onload = function() {
-				renderMath("front");
-				markdown("front");
-				document.getElementById("front").style.visibility = "visible ";
+	let getScripts = [
+		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+	]
+	
+	Promise.all(getScripts).then(() => render());
+	
+
+	function getScript(path, altURL) {
+		return new Promise(resolve => {
+			let script = document.createElement('script');
+			script.onload = () => resolve();
+			script.onerror = function() {
+				let script_online = document.createElement('script');
+				script_online.onload = () => resolve();
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
 			}
-			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
-			document.head.appendChild(markdownIt);
-		}
-		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
-		document.head.appendChild(katex_auto_loader);
+			script.src = path;
+			document.head.appendChild(script);
+		})
 	}
-	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
-	document.head.appendChild(katex);
+
+
+	function render() {
+		renderMath("front");
+		markdown("front");
+		document.getElementById("front").style.visibility = "visible ";
+	}
+
 
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -240,39 +290,54 @@ front_cloze = """
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
-		str = str.replace(/<span[^>]*>/gi, "");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
 """
 
 back_cloze = """
+
 <div id="back">{{cloze:Text}}</div><br>
 <div id="extra">{{Back Extra}}</div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let katex = document.createElement('script');
-	katex.onload = function() {
-		let katex_auto_loader = document.createElement('script');
-		katex_auto_loader.onload = function() {
-			let markdownIt = document.createElement('script');
-			markdownIt.onload = function() {
-				renderMath("back");
-				markdown("back");
-				renderMath("extra");
-				markdown("extra");
-				document.getElementById("back").style.visibility = "visible ";
-				document.getElementById("extra").style.visibility = "visible ";
+	let getScripts = [
+		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+	]
+	
+	Promise.all(getScripts).then(() => render());
+	
+
+	function getScript(path, altURL) {
+		return new Promise(resolve => {
+			let script = document.createElement('script');
+			script.onload = () => resolve();
+			script.onerror = function() {
+				let script_online = document.createElement('script');
+				script_online.onload = () => resolve();
+				script_online.src = altURL;
+				document.head.appendChild(script_online);
 			}
-			markdownIt.src = "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js";
-			document.head.appendChild(markdownIt);
-		}
-		katex_auto_loader.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js";
-		document.head.appendChild(katex_auto_loader);
+			script.src = path;
+			document.head.appendChild(script);
+		})
 	}
-	katex.src = "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js";
-	document.head.appendChild(katex);
+
+
+	function render() {
+		renderMath("back");
+		markdown("back");
+		renderMath("extra");
+		markdown("extra");
+		document.getElementById("back").style.visibility = "visible ";
+		document.getElementById("extra").style.visibility = "visible ";
+	}
+
 
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -295,7 +360,8 @@ back_cloze = """
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
-		str = str.replace(/<span[^>]*>/gi, "");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
