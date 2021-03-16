@@ -5,7 +5,7 @@ import anki
 import os, shutil
 
 MODEL_NAME = 'KaTeX and Markdown'
-VERSION = 1.0
+VERSION = 1.1
 CONF = { 'version': VERSION }
 CONF_NAME = 'MDKATEX'
 
@@ -98,11 +98,13 @@ front = """
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let getScripts = [
-		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-	]
+	if (typeof getScripts === "undefined") {
+		getScripts = [
+			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+		]
+	}
 	
 	Promise.all(getScripts).then(() => render());
 	
@@ -168,11 +170,13 @@ back = """
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let getScripts = [
-		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-	]
+	if (typeof getScripts === "undefined") {
+		getScripts = [
+			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+		]
+	}
 	
 	Promise.all(getScripts).then(() => render());
 	
@@ -237,11 +241,13 @@ front_cloze = """
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let getScripts = [
-		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-	]
+	if (typeof getScripts === "undefined") {
+		getScripts = [
+			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+		]
+	}
 	
 	Promise.all(getScripts).then(() => render());
 	
@@ -304,11 +310,13 @@ back_cloze = """
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	let getScripts = [
-		getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-		getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-	]
+	if (typeof getScripts === "undefined") {
+		getScripts = [
+			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
+			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
+		]
+	}
 	
 	Promise.all(getScripts).then(() => render());
 	
