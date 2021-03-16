@@ -1,5 +1,5 @@
 /* eslint no-console:0 */
-const findEndOfMath = function (delimiter, text, startIndex) {
+var findEndOfMath = function (delimiter, text, startIndex) {
   // Adapted from
   // https://github.com/Khan/perseus/blob/master/src/perseus-markdown.jsx
   let index = startIndex;
@@ -29,7 +29,7 @@ const findEndOfMath = function (delimiter, text, startIndex) {
   return -1;
 };
 
-const splitAtDelimiters = function (startData, leftDelim, rightDelim, display) {
+var splitAtDelimiters = function (startData, leftDelim, rightDelim, display) {
   const finalData = [];
 
   for (let i = 0; i < startData.length; i++) {
@@ -98,7 +98,7 @@ const splitAtDelimiters = function (startData, leftDelim, rightDelim, display) {
   return finalData;
 };
 
-const splitWithDelimiters = function (text, delimiters) {
+var splitWithDelimiters = function (text, delimiters) {
   let data = [{ type: "text", data: text }];
   for (let i = 0; i < delimiters.length; i++) {
     const delimiter = delimiters[i];
@@ -115,7 +115,7 @@ const splitWithDelimiters = function (text, delimiters) {
 /* Note: optionsCopy is mutated by this method. If it is ever exposed in the
  * API, we should copy it before mutating.
  */
-const renderMathInText = function (text, optionsCopy) {
+var renderMathInText = function (text, optionsCopy) {
   const data = splitWithDelimiters(text, optionsCopy.delimiters);
   if (data.length === 1 && data[0].type === "text") {
     // There is no formula in the text.
@@ -158,7 +158,7 @@ const renderMathInText = function (text, optionsCopy) {
   return fragment;
 };
 
-const renderElem = function (elem, optionsCopy) {
+var renderElem = function (elem, optionsCopy) {
   for (let i = 0; i < elem.childNodes.length; i++) {
     const childNode = elem.childNodes[i];
     if (childNode.nodeType === 3) {
@@ -186,7 +186,7 @@ const renderElem = function (elem, optionsCopy) {
   }
 };
 
-const renderMathInElement = function (elem, options) {
+var renderMathInElement = function (elem, options) {
   if (!elem) {
     throw new Error("No element provided to render");
   }
@@ -231,5 +231,3 @@ const renderMathInElement = function (elem, options) {
 
   renderElem(elem, optionsCopy);
 };
-
-export default renderMathInElement;
