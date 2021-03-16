@@ -5,7 +5,7 @@ import anki
 import os, shutil
 
 MODEL_NAME = 'KaTeX and Markdown'
-VERSION = 1.1
+VERSION = 1.3
 CONF = { 'version': VERSION }
 CONF_NAME = 'MDKATEX'
 
@@ -98,24 +98,25 @@ front = """
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	if (typeof getScripts === "undefined") {
-		getScripts = [
-			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-		]
-	}
-	
-	Promise.all(getScripts).then(() => render());
+	var getScripts = [
+		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	];
+
+	Promise.all(getScripts).then(render).catch(show);
 	
 
-	function getScript(path, altURL) {
-		return new Promise(resolve => {
+	function getScript(path, altURL, scriptType) {
+		return new Promise((resolve, reject) => {
 			let script = document.createElement('script');
-			script.onload = () => resolve();
+			script.onload = resolve;
+			script.type = scriptType;
 			script.onerror = function() {
 				let script_online = document.createElement('script');
-				script_online.onload = () => resolve();
+				script_online.type = scriptType;
+				script_online.onload = resolve;
+				script_online.onerror = reject;
 				script_online.src = altURL;
 				document.head.appendChild(script_online);
 			}
@@ -128,6 +129,10 @@ front = """
 	function render() {
 		renderMath("front");
 		markdown("front");
+		show();
+	}
+
+	function show() {
 		document.getElementById("front").style.visibility = "visible ";
 	}
 
@@ -161,7 +166,6 @@ front = """
 """
 
 back = """
-
 <div id="front">{{Front}}</div>
 
 <hr id=answer>
@@ -170,24 +174,25 @@ back = """
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	if (typeof getScripts === "undefined") {
-		getScripts = [
-			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-		]
-	}
-	
-	Promise.all(getScripts).then(() => render());
+	var getScripts = [
+		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	];
+
+	Promise.all(getScripts).then(render).catch(show);
 	
 
-	function getScript(path, altURL) {
-		return new Promise(resolve => {
+	function getScript(path, altURL, scriptType) {
+		return new Promise((resolve, reject) => {
 			let script = document.createElement('script');
-			script.onload = () => resolve();
+			script.onload = resolve;
+			script.type = scriptType;
 			script.onerror = function() {
 				let script_online = document.createElement('script');
-				script_online.onload = () => resolve();
+				script_online.type = scriptType;
+				script_online.onload = resolve;
+				script_online.onerror = reject;
 				script_online.src = altURL;
 				document.head.appendChild(script_online);
 			}
@@ -202,6 +207,10 @@ back = """
 		markdown("front");
 		renderMath("back");
 		markdown("back");
+		show();
+	}
+
+	function show() {
 		document.getElementById("front").style.visibility = "visible ";
 		document.getElementById("back").style.visibility = "visible ";
 	}
@@ -233,32 +242,33 @@ back = """
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
+
 """
 
 front_cloze = """
-
 <div id="front">{{cloze:Text}}</div>
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	if (typeof getScripts === "undefined") {
-		getScripts = [
-			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-		]
-	}
-	
-	Promise.all(getScripts).then(() => render());
+	var getScripts = [
+		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	];
+
+	Promise.all(getScripts).then(render).catch(show);
 	
 
-	function getScript(path, altURL) {
-		return new Promise(resolve => {
+	function getScript(path, altURL, scriptType) {
+		return new Promise((resolve, reject) => {
 			let script = document.createElement('script');
-			script.onload = () => resolve();
+			script.onload = resolve;
+			script.type = scriptType;
 			script.onerror = function() {
 				let script_online = document.createElement('script');
-				script_online.onload = () => resolve();
+				script_online.type = scriptType;
+				script_online.onload = resolve;
+				script_online.onerror = reject;
 				script_online.src = altURL;
 				document.head.appendChild(script_online);
 			}
@@ -266,15 +276,14 @@ front_cloze = """
 			document.head.appendChild(script);
 		})
 	}
-
-
 	function render() {
 		renderMath("front");
 		markdown("front");
+		show();
+	}
+	function show() {
 		document.getElementById("front").style.visibility = "visible ";
 	}
-
-
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
@@ -301,33 +310,34 @@ front_cloze = """
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
+
 """
 
 back_cloze = """
-
 <div id="back">{{cloze:Text}}</div><br>
 <div id="extra">{{Back Extra}}</div>
 
 <link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	if (typeof getScripts === "undefined") {
-		getScripts = [
-			getScript("_katex/dist/katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
-			getScript("_katex/dist/contrib/auto-render.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"),
-			getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
-		]
-	}
-	
-	Promise.all(getScripts).then(() => render());
+	var getScripts = [
+		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	];
+
+	Promise.all(getScripts).then(render).catch(show);
 	
 
-	function getScript(path, altURL) {
-		return new Promise(resolve => {
+	function getScript(path, altURL, scriptType) {
+		return new Promise((resolve, reject) => {
 			let script = document.createElement('script');
-			script.onload = () => resolve();
+			script.onload = resolve;
+			script.type = scriptType;
 			script.onerror = function() {
 				let script_online = document.createElement('script');
-				script_online.onload = () => resolve();
+				script_online.type = scriptType;
+				script_online.onload = resolve;
+				script_online.onerror = reject;
 				script_online.src = altURL;
 				document.head.appendChild(script_online);
 			}
@@ -341,11 +351,14 @@ back_cloze = """
 		renderMath("back");
 		markdown("back");
 		renderMath("extra");
-		markdown("extra");
+		markdown("extra");	
+		show();
+	}
+
+	function show() {
 		document.getElementById("back").style.visibility = "visible ";
 		document.getElementById("extra").style.visibility = "visible ";
 	}
-
 
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -373,6 +386,7 @@ back_cloze = """
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
+
 """
 
 css = """
