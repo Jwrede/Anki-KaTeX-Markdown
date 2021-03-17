@@ -5,8 +5,6 @@ import anki
 import os, shutil
 
 MODEL_NAME = 'KaTeX and Markdown'
-VERSION = 1.3
-CONF = { 'version': VERSION }
 CONF_NAME = 'MDKATEX'
 
 def create_model_if_necessacy():
@@ -19,20 +17,7 @@ def create_model_if_necessacy():
     if not model_cloze:
         create_model_cloze()
         
-    if CONF_NAME not in mw.col.conf:
-        mw.col.conf[CONF_NAME] = CONF
-        # Because I added the Versionmanager in v0.2
-        updateTemplates()
-    else:
-        if mw.col.conf[CONF_NAME]['version'] < CONF['version']:
-            update_templates()
-            mw.col.conf[CONF_NAME] = CONF
-
-    if not os.path.isdir(os.path.join(mw.col.media.dir(), "_katex")):
-        shutil.copytree(os.path.join(os.path.dirname(os.path.realpath(__file__)), "_katex"), os.path.join(mw.col.media.dir(), "_katex"))
-
-    if not os.path.isdir(os.path.join(mw.col.media.dir(), "_markdown-it")):
-        shutil.copytree(os.path.join(os.path.dirname(os.path.realpath(__file__)), "_markdown-it"), os.path.join(mw.col.media.dir(), "_markdown-it"))
+    update()
 
 
 def create_model():
@@ -75,7 +60,7 @@ def create_model_cloze():
     m.add(model)
     m.save(model)
     
-def update_templates():
+def update():
     model = mw.col.models.byName(MODEL_NAME + " Basic")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
 
@@ -90,18 +75,37 @@ def update_templates():
     mw.col.models.save(model)
     mw.col.models.save(model_cloze)
 
+    if os.path.isdir(os.path.join(mw.col.media.dir(), "_katex")):
+        shutil.rmtree(os.path.join(mw.col.media.dir(), "_katex"))
+
+    if os.path.isdir(os.path.join(mw.col.media.dir(), "_markdown-it")):
+        shutil.rmtree(os.path.join(mw.col.media.dir(), "_markdown-it"))
+
+    addon_path = os.path.join(os.path.dirname(os.path.realpath(__file__)))
+        
+    _add_file(os.path.join(addon_path, "_katex.min.js"), "_katex.min.js")
+    _add_file(os.path.join(addon_path, "_katex.css"), "_katex.css")
+    _add_file(os.path.join(addon_path, "_auto-render.js"), "_auto-render.js")
+    _add_file(os.path.join(addon_path, "_markdown-it.min.js"), "_markdown-it.min.js")
+
+    for katex_font in os.listdir(os.path.join(addon_path, "fonts")):
+        _add_file(os.path.join(addon_path, "fonts", katex_font), katex_font)
+
+def _add_file(path, filename):
+    if not os.path.isfile(os.path.join(mw.col.media.dir(), filename)):
+        mw.col.media.add_file(path)
 
 addHook("profileLoaded", create_model_if_necessacy)
 
 front = """
-<div id="front">{{Front}}</div>
+<div id="front"><pre>{{Front}}</pre></div>
 
-<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
 	var getScripts = [
-		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
 	];
 
 	Promise.all(getScripts).then(render).catch(show);
@@ -154,6 +158,7 @@ front = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
@@ -166,18 +171,18 @@ front = """
 """
 
 back = """
-<div id="front">{{Front}}</div>
+<div id="front"><pre>{{Front}}</pre></div>
 
 <hr id=answer>
 
-<div id="back">{{Back}}</div>
+<div id="back"><pre>{{Back}}</pre></div>
 
-<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
 	var getScripts = [
-		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
 	];
 
 	Promise.all(getScripts).then(render).catch(show);
@@ -233,6 +238,7 @@ back = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
@@ -246,14 +252,14 @@ back = """
 """
 
 front_cloze = """
-<div id="front">{{cloze:Text}}</div>
+<div id="front"><pre>{{cloze:Text}}</pre></div>
 
-<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
 	var getScripts = [
-		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
 	];
 
 	Promise.all(getScripts).then(render).catch(show);
@@ -301,6 +307,7 @@ front_cloze = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
@@ -314,15 +321,15 @@ front_cloze = """
 """
 
 back_cloze = """
-<div id="back">{{cloze:Text}}</div><br>
-<div id="extra">{{Back Extra}}</div>
+<div id="back"><pre>{{cloze:Text}}</pre></div><br>
+<div id="extra"><pre>{{Back Extra}}</pre></div>
 
-<link rel="stylesheet" href="_katex/dist/katex.min.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
+<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
 	var getScripts = [
-		getScript("_katex/dist/katex.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_katex/contrib/auto-render/auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/_katex/contrib/auto-render/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it/dist/markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
 	];
 
 	Promise.all(getScripts).then(render).catch(show);
@@ -377,6 +384,7 @@ back_cloze = """
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
+		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/&nbsp;/g, " ");
 		str = str.replace(/&amp;/g, "&");
