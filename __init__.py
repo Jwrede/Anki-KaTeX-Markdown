@@ -100,25 +100,23 @@ addHook("profileLoaded", create_model_if_necessacy)
 front = """
 <div id="front"><pre>{{Front}}</pre></div>
 
-<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	var getScripts = [
-		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	var getResources = [
+		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getScripts).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
-	function getScript(path, altURL, scriptType) {
+	function getScript(path, altURL) {
 		return new Promise((resolve, reject) => {
-			let script = document.createElement('script');
+			let script = document.createElement("script");
 			script.onload = resolve;
-			script.type = scriptType;
 			script.onerror = function() {
-				let script_online = document.createElement('script');
-				script_online.type = scriptType;
+				let script_online = document.createElement("script");
 				script_online.onload = resolve;
 				script_online.onerror = reject;
 				script_online.src = altURL;
@@ -127,6 +125,26 @@ front = """
 			script.src = path;
 			document.head.appendChild(script);
 		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css.onerror = reject;
+				css.href = altURL;
+				document.head.appendChild(css);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
 	}
 
 
@@ -140,10 +158,11 @@ front = """
 		document.getElementById("front").style.visibility = "visible ";
 	}
 
-
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+		text = decodeHtml(text);
+		console.log(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -152,16 +171,22 @@ front = """
 			],
 		});
 	}
+
+	function decodeHtml(html) {
+   		var txt = document.createElement("textarea");
+    	txt.innerHTML = html;
+    	return txt.value;
+	}
+
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
@@ -171,31 +196,30 @@ front = """
 """
 
 back = """
+
 <div id="front"><pre>{{Front}}</pre></div>
 
 <hr id=answer>
 
 <div id="back"><pre>{{Back}}</pre></div>
 
-<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	var getScripts = [
-		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	var getResources = [
+		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getScripts).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
-	function getScript(path, altURL, scriptType) {
+	function getScript(path, altURL) {
 		return new Promise((resolve, reject) => {
-			let script = document.createElement('script');
+			let script = document.createElement("script");
 			script.onload = resolve;
-			script.type = scriptType;
 			script.onerror = function() {
-				let script_online = document.createElement('script');
-				script_online.type = scriptType;
+				let script_online = document.createElement("script");
 				script_online.onload = resolve;
 				script_online.onerror = reject;
 				script_online.src = altURL;
@@ -206,6 +230,25 @@ back = """
 		})
 	}
 
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css.onerror = reject;
+				css.href = altURL;
+				document.head.appendChild(css);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
+	}
 
 	function render() {
 		renderMath("front");
@@ -224,6 +267,7 @@ back = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -232,16 +276,20 @@ back = """
 			],
 		});
 	}
+	function decodeHtml(html) {
+   		var txt = document.createElement("textarea");
+    	txt.innerHTML = html;
+    	return txt.value;
+	}
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
@@ -249,30 +297,30 @@ back = """
 	}
 </script>
 
+
 """
 
 front_cloze = """
+
 <div id="front"><pre>{{cloze:Text}}</pre></div>
 
-<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	var getScripts = [
-		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	var getResources = [
+		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getScripts).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
-	function getScript(path, altURL, scriptType) {
+	function getScript(path, altURL) {
 		return new Promise((resolve, reject) => {
-			let script = document.createElement('script');
+			let script = document.createElement("script");
 			script.onload = resolve;
-			script.type = scriptType;
 			script.onerror = function() {
-				let script_online = document.createElement('script');
-				script_online.type = scriptType;
+				let script_online = document.createElement("script");
 				script_online.onload = resolve;
 				script_online.onerror = reject;
 				script_online.src = altURL;
@@ -281,6 +329,26 @@ front_cloze = """
 			script.src = path;
 			document.head.appendChild(script);
 		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css.onerror = reject;
+				css.href = altURL;
+				document.head.appendChild(css);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
 	}
 	function render() {
 		renderMath("front");
@@ -293,6 +361,7 @@ front_cloze = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -304,45 +373,46 @@ front_cloze = """
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
+	}
+	function decodeHtml(html) {
+   		var txt = document.createElement("textarea");
+    	txt.innerHTML = html;
+    	return txt.value;
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
-
 """
 
 back_cloze = """
 <div id="back"><pre>{{cloze:Text}}</pre></div><br>
 <div id="extra"><pre>{{Back Extra}}</pre></div>
 
-<link rel="stylesheet" href="_katex.css" onerror="this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css';" crossorigin="anonymous">
 <script>
-	var getScripts = [
-		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js", ""),
-		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js", "text/javascript"),
-		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js", "")
+	var getResources = [
+		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
+		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getScripts).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
-	function getScript(path, altURL, scriptType) {
+	function getScript(path, altURL) {
 		return new Promise((resolve, reject) => {
-			let script = document.createElement('script');
+			let script = document.createElement("script");
 			script.onload = resolve;
-			script.type = scriptType;
 			script.onerror = function() {
-				let script_online = document.createElement('script');
-				script_online.type = scriptType;
+				let script_online = document.createElement("script");
 				script_online.onload = resolve;
 				script_online.onerror = reject;
 				script_online.src = altURL;
@@ -351,6 +421,26 @@ back_cloze = """
 			script.src = path;
 			document.head.appendChild(script);
 		})
+	}
+
+	function getCSS(path, altURL) {
+		return new Promise((resolve, reject) => {
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.type = 'text/css';
+			css.onload = resolve;
+			css.onerror = function() {
+				var css_online = document.createElement('link');
+				css_online.setAttribute('rel', 'stylesheet');
+				css_online.type = 'text/css';
+				css_online.onload = resolve;
+				css.onerror = reject;
+				css.href = altURL;
+				document.head.appendChild(css);
+			}
+			css.href = path;
+			document.head.appendChild(css);
+		});
 	}
 
 
@@ -370,6 +460,7 @@ back_cloze = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -381,20 +472,23 @@ back_cloze = """
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
+		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
+	}
+	function decodeHtml(html) {
+   		var txt = document.createElement("textarea");
+    	txt.innerHTML = html;
+    	return txt.value;
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/&nbsp;/g, " ");
-		str = str.replace(/&amp;/g, "&");
 		str = str.replace(/<div>/g, "\\n");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
-
 """
 
 css = """
@@ -407,22 +501,6 @@ css = """
 table, th, td {
 	border: 1px solid black;
 	border-collapse: collapse;
-}
-code {
-    background: #f4f4f4;
-    border: 1px solid #ddd;
-    border-left: 3px solid #f36d33;
-    color: #666;
-    page-break-inside: avoid;
-    font-family: monospace;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 1.6em;
-    max-width: 100%;
-    overflow: auto;
-    padding: 1em 1.5em;
-    display: block;
-    word-wrap: break-word;
 }
 #front, #back, #extra {
 	visibility: hidden;
