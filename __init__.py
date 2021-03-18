@@ -66,11 +66,12 @@ def update():
 
     model['tmpls'][0]['qfmt'] = front
     model['tmpls'][0]['afmt'] = back
-    model['tmpls'][0]['css'] = css
+    model['css'] = css
+    
 
     model_cloze['tmpls'][0]['qfmt'] = front_cloze
     model_cloze['tmpls'][0]['afmt'] = back_cloze
-    model_cloze['tmpls'][0]['css'] = css
+    model_cloze['css'] = css
 
     mw.col.models.save(model)
     mw.col.models.save(model_cloze)
@@ -98,6 +99,7 @@ def _add_file(path, filename):
 addHook("profileLoaded", create_model_if_necessacy)
 
 front = """
+
 <div id="front"><pre>{{Front}}</pre></div>
 
 <script>
@@ -161,8 +163,6 @@ front = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
-		text = decodeHtml(text);
-		console.log(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -172,22 +172,20 @@ front = """
 		});
 	}
 
-	function decodeHtml(html) {
-   		var txt = document.createElement("textarea");
-    	txt.innerHTML = html;
-    	return txt.value;
-	}
-
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/g, "\\n");
+		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/&nbsp;/gi, " ");
+		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&gt;/gi, ">");
+		str = str.replace(/&lt;/gi, "<");
+		str = str.replace(/&amp;/gi, "&");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
@@ -267,7 +265,6 @@ back = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -276,21 +273,20 @@ back = """
 			],
 		});
 	}
-	function decodeHtml(html) {
-   		var txt = document.createElement("textarea");
-    	txt.innerHTML = html;
-    	return txt.value;
-	}
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/g, "\\n");
+		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/&nbsp;/gi, " ");
+		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&gt;/gi, ">");
+		str = str.replace(/&lt;/gi, "<");
+		str = str.replace(/&amp;/gi, "&");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
@@ -361,7 +357,6 @@ front_cloze = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -373,18 +368,17 @@ front_cloze = """
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
-	}
-	function decodeHtml(html) {
-   		var txt = document.createElement("textarea");
-    	txt.innerHTML = html;
-    	return txt.value;
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/g, "\\n");
+		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/&nbsp;/gi, " ");
+		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&gt;/gi, ">");
+		str = str.replace(/&lt;/gi, "<");
+		str = str.replace(/&amp;/gi, "&");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
@@ -460,7 +454,6 @@ back_cloze = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
@@ -472,18 +465,17 @@ back_cloze = """
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true});
 		let text = document.getElementById(ID).innerHTML;
-		text = decodeHtml(text);
 		document.getElementById(ID).innerHTML = md.render(text);
-	}
-	function decodeHtml(html) {
-   		var txt = document.createElement("textarea");
-    	txt.innerHTML = html;
-    	return txt.value;
 	}
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre>/gi, "");
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/g, "\\n");
+		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/&nbsp;/gi, " ");
+		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&gt;/gi, ">");
+		str = str.replace(/&lt;/gi, "<");
+		str = str.replace(/&amp;/gi, "&");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		return str.replace(/<\/div>/g, "\\n");
