@@ -99,12 +99,11 @@ def _add_file(path, filename):
 addHook("profileLoaded", create_model_if_necessacy)
 
 front = """
-
 <div id="front"><pre>{{Front}}</pre></div>
 
 <script>
 	var getResources = [
-		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -141,8 +140,8 @@ front = """
 				css_online.type = 'text/css';
 				css_online.onload = resolve;
 				css.onerror = reject;
-				css.href = altURL;
-				document.head.appendChild(css);
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
 			}
 			css.href = path;
 			document.head.appendChild(css);
@@ -157,7 +156,7 @@ front = """
 	}
 
 	function show() {
-		document.getElementById("front").style.visibility = "visible ";
+		document.getElementById("front").style.color = "rgb(0,0,0,1)";
 	}
 
 	function renderMath(ID) {
@@ -182,7 +181,7 @@ front = """
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/<div>/gi, "\\n");
 		str = str.replace(/&nbsp;/gi, " ");
-		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
 		str = str.replace(/&amp;/gi, "&");
@@ -194,7 +193,6 @@ front = """
 """
 
 back = """
-
 <div id="front"><pre>{{Front}}</pre></div>
 
 <hr id=answer>
@@ -203,7 +201,7 @@ back = """
 
 <script>
 	var getResources = [
-		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -239,9 +237,9 @@ back = """
 				css_online.setAttribute('rel', 'stylesheet');
 				css_online.type = 'text/css';
 				css_online.onload = resolve;
-				css.onerror = reject;
-				css.href = altURL;
-				document.head.appendChild(css);
+				css_online.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
 			}
 			css.href = path;
 			document.head.appendChild(css);
@@ -257,8 +255,8 @@ back = """
 	}
 
 	function show() {
-		document.getElementById("front").style.visibility = "visible ";
-		document.getElementById("back").style.visibility = "visible ";
+		document.getElementById("front").style.color = "rgb(0,0,0,1)";
+		document.getElementById("back").style.color = "rgb(0,0,0,1)";
 	}
 
 
@@ -283,7 +281,7 @@ back = """
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/<div>/gi, "\\n");
 		str = str.replace(/&nbsp;/gi, " ");
-		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
 		str = str.replace(/&amp;/gi, "&");
@@ -292,17 +290,14 @@ back = """
 		return str.replace(/<\/div>/g, "\\n");
 	}
 </script>
-
-
 """
 
 front_cloze = """
-
 <div id="front"><pre>{{cloze:Text}}</pre></div>
 
 <script>
 	var getResources = [
-		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -338,9 +333,9 @@ front_cloze = """
 				css_online.setAttribute('rel', 'stylesheet');
 				css_online.type = 'text/css';
 				css_online.onload = resolve;
-				css.onerror = reject;
-				css.href = altURL;
-				document.head.appendChild(css);
+				css_online.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
 			}
 			css.href = path;
 			document.head.appendChild(css);
@@ -352,7 +347,7 @@ front_cloze = """
 		show();
 	}
 	function show() {
-		document.getElementById("front").style.visibility = "visible ";
+		document.getElementById("front").style.color = "rgb(0,0,0,1)";
 	}
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -375,7 +370,7 @@ front_cloze = """
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/<div>/gi, "\\n");
 		str = str.replace(/&nbsp;/gi, " ");
-		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
 		str = str.replace(/&amp;/gi, "&");
@@ -392,7 +387,7 @@ back_cloze = """
 
 <script>
 	var getResources = [
-		getCSS("_katex.css", "this.href='https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -428,9 +423,9 @@ back_cloze = """
 				css_online.setAttribute('rel', 'stylesheet');
 				css_online.type = 'text/css';
 				css_online.onload = resolve;
-				css.onerror = reject;
-				css.href = altURL;
-				document.head.appendChild(css);
+				css_online.onerror = reject;
+				css_online.href = altURL;
+				document.head.appendChild(css_online);
 			}
 			css.href = path;
 			document.head.appendChild(css);
@@ -447,8 +442,8 @@ back_cloze = """
 	}
 
 	function show() {
-		document.getElementById("back").style.visibility = "visible ";
-		document.getElementById("extra").style.visibility = "visible ";
+		document.getElementById("back").style.color = "rgb(0,0,0,1)";
+		document.getElementById("extra").style.color = "rgb(0,0,0,1)";
 	}
 
 	function renderMath(ID) {
@@ -472,7 +467,7 @@ back_cloze = """
 		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
 		str = str.replace(/<div>/gi, "\\n");
 		str = str.replace(/&nbsp;/gi, " ");
-		str = str.replace(/&tab;/gi, "\t");
+		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
 		str = str.replace(/&amp;/gi, "&");
@@ -482,8 +477,8 @@ back_cloze = """
 	}
 </script>
 """
-
 css = """
+
 .card {
   font-family: arial;
   font-size: 20px;
@@ -495,6 +490,14 @@ table, th, td {
 	border-collapse: collapse;
 }
 #front, #back, #extra {
-	visibility: hidden;
+	color: rgb(0,0,0,0);
+	transition: color 0.1s ease-in;
+}
+pre code {
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  padding: 20px;
+  overflow: auto;
 }
 """
