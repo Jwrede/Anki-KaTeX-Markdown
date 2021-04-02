@@ -491,7 +491,7 @@ table, th, td {
 }
 #front, #back, #extra {
 	color: rgb(0,0,0,0);
-	transition: color 0.1s ease-in;
+	transition: color 0.025s ease-in;
 }
 pre code {
   background-color: #eee;
