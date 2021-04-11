@@ -156,7 +156,7 @@ front = """
 	}
 
 	function show() {
-		document.getElementById("front").style.color = "rgb(0,0,0,1)";
+		document.getElementById("front").style.visibility = "visible";
 	}
 
 	function renderMath(ID) {
@@ -255,8 +255,8 @@ back = """
 	}
 
 	function show() {
-		document.getElementById("front").style.color = "rgb(0,0,0,1)";
-		document.getElementById("back").style.color = "rgb(0,0,0,1)";
+		document.getElementById("front").style.visibility = "visible";
+		document.getElementById("back").style.visibility = "visible";
 	}
 
 
@@ -347,7 +347,7 @@ front_cloze = """
 		show();
 	}
 	function show() {
-		document.getElementById("front").style.color = "rgb(0,0,0,1)";
+		document.getElementById("front").style.visibility = "visible";
 	}
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
@@ -442,8 +442,8 @@ back_cloze = """
 	}
 
 	function show() {
-		document.getElementById("back").style.color = "rgb(0,0,0,1)";
-		document.getElementById("extra").style.color = "rgb(0,0,0,1)";
+		document.getElementById("back").style.visibility = "visible";
+		document.getElementById("extra").style.visibility = "visible";
 	}
 
 	function renderMath(ID) {
@@ -490,8 +490,7 @@ table, th, td {
 	border-collapse: collapse;
 }
 #front, #back, #extra {
-	color: rgb(0,0,0,0);
-	transition: color 0.025s ease-in;
+	visibility: hidden;
 }
 pre code {
   background-color: #eee;
