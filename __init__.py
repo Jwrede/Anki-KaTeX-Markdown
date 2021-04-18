@@ -168,6 +168,7 @@ front = """
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
+                        throwOnError : false
 		});
 	}
 
@@ -269,6 +270,7 @@ back = """
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
+                        throwOnError : false
 		});
 	}
 	function markdown(ID) {
@@ -358,6 +360,7 @@ front_cloze = """
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
+                        throwOnError : false
 		});
 	}
 	function markdown(ID) {
@@ -455,6 +458,7 @@ back_cloze = """
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
+                        throwOnError : false
 		});
 	}
 	function markdown(ID) {
