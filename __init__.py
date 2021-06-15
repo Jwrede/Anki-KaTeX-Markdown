@@ -88,6 +88,8 @@ def update():
     _add_file(os.path.join(addon_path, "_katex.css"), "_katex.css")
     _add_file(os.path.join(addon_path, "_auto-render.js"), "_auto-render.js")
     _add_file(os.path.join(addon_path, "_markdown-it.min.js"), "_markdown-it.min.js")
+    _add_file(os.path.join(addon_path, "_highlight.css"), "_highlight.css")
+    _add_file(os.path.join(addon_path, "_highlight.js"), "_highlight.js")
 
     for katex_font in os.listdir(os.path.join(addon_path, "fonts")):
         _add_file(os.path.join(addon_path, "fonts", katex_font), katex_font)
@@ -99,11 +101,14 @@ def _add_file(path, filename):
 addHook("profileLoaded", create_model_if_necessacy)
 
 front = """
+
 <div id="front"><pre>{{Front}}</pre></div>
 
 <script>
 	var getResources = [
 		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
+		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -168,32 +173,46 @@ front = """
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
-                        throwOnError : false
+            throwOnError : false
 		});
 	}
 
 	function markdown(ID) {
-		let md = new markdownit({typographer: true, html:true});
-		let text = document.getElementById(ID).innerHTML;
-		document.getElementById(ID).innerHTML = md.render(text);
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }});
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
 	}
 	function replaceInString(str) {
-		str = str.replace(/<[\/]?pre>/gi, "");
-		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
+		str = str.replace(/<div[^>]*>/gi, "\\n");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
+		str.replace(/<\/div[^>]*>/g, "\\n");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
 		str = str.replace(/&nbsp;/gi, " ");
 		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
-		str = str.replace(/&amp;/gi, "&");
-		// Thanks Graham A!
-		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		return str.replace(/<\/div>/g, "\\n");
+		return str.replace(/&amp;/gi, "&");
 	}
 </script>
 """
 
 back = """
+
 <div id="front"><pre>{{Front}}</pre></div>
 
 <hr id=answer>
@@ -203,6 +222,8 @@ back = """
 <script>
 	var getResources = [
 		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
+		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -274,32 +295,48 @@ back = """
 		});
 	}
 	function markdown(ID) {
-		let md = new markdownit({typographer: true, html:true});
-		let text = document.getElementById(ID).innerHTML;
-		document.getElementById(ID).innerHTML = md.render(text);
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }});
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
 	}
 	function replaceInString(str) {
-		str = str.replace(/<[\/]?pre>/gi, "");
-		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
+		str = str.replace(/<div[^>]*>/gi, "\\n");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
+		str.replace(/<\/div[^>]*>/g, "\\n");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
 		str = str.replace(/&nbsp;/gi, " ");
 		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
-		str = str.replace(/&amp;/gi, "&");
-		// Thanks Graham A!
-		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		return str.replace(/<\/div>/g, "\\n");
+		return str.replace(/&amp;/gi, "&");
 	}
 </script>
 """
 
 front_cloze = """
+
 <div id="front"><pre>{{cloze:Text}}</pre></div>
 
 <script>
 	var getResources = [
 		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
+		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -364,33 +401,49 @@ front_cloze = """
 		});
 	}
 	function markdown(ID) {
-		let md = new markdownit({typographer: true, html:true});
-		let text = document.getElementById(ID).innerHTML;
-		document.getElementById(ID).innerHTML = md.render(text);
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }});
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
 	}
 	function replaceInString(str) {
-		str = str.replace(/<[\/]?pre>/gi, "");
-		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
+		str = str.replace(/<div[^>]*>/gi, "\\n");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
+		str.replace(/<\/div[^>]*>/g, "\\n");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
 		str = str.replace(/&nbsp;/gi, " ");
 		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
-		str = str.replace(/&amp;/gi, "&");
-		// Thanks Graham A!
-		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		return str.replace(/<\/div>/g, "\\n");
+		return str.replace(/&amp;/gi, "&");
 	}
 </script>
 """
 
 back_cloze = """
+
 <div id="back"><pre>{{cloze:Text}}</pre></div><br>
 <div id="extra"><pre>{{Back Extra}}</pre></div>
 
 <script>
 	var getResources = [
 		getCSS("_katex.css", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"),
+		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
+		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
@@ -462,24 +515,38 @@ back_cloze = """
 		});
 	}
 	function markdown(ID) {
-		let md = new markdownit({typographer: true, html:true});
-		let text = document.getElementById(ID).innerHTML;
-		document.getElementById(ID).innerHTML = md.render(text);
+		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
+                            if (lang && hljs.getLanguage(lang)) {
+                                try {
+                                    return hljs.highlight(str, { language: lang }).value;
+                                } catch (__) {}
+                            }
+
+                            return ''; // use external default escaping
+                        }});
+		let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+		text = md.render(text);
+		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
 	}
 	function replaceInString(str) {
-		str = str.replace(/<[\/]?pre>/gi, "");
-		str = str.replace(/<br\s*[\/]?>/gi, "\\n");
-		str = str.replace(/<div>/gi, "\\n");
+		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
+		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
+		str = str.replace(/<div[^>]*>/gi, "\\n");
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
+		str.replace(/<\/div[^>]*>/g, "\\n");
+		return replaceHTMLElementsInString(str);
+	}
+
+	function replaceHTMLElementsInString(str) {
 		str = str.replace(/&nbsp;/gi, " ");
 		str = str.replace(/&tab;/gi, "	");
 		str = str.replace(/&gt;/gi, ">");
 		str = str.replace(/&lt;/gi, "<");
-		str = str.replace(/&amp;/gi, "&");
-		// Thanks Graham A!
-		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		return str.replace(/<\/div>/g, "\\n");
+		return str.replace(/&amp;/gi, "&");
 	}
 </script>
+
 """
 css = """
 
