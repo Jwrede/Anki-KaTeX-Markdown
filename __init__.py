@@ -13,6 +13,23 @@ CONF_NAME = 'MDKATEX'
 def markdownPreview(editor):
     if editor.note.model()["name"] in [MODEL_NAME + " Basic", MODEL_NAME + " Cloze"]:
         editor.web.eval(HTMLforEditor)
+        editor.web.eval("""
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerText = `
+                table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+                pre code {
+                    background-color: #eee;
+                    border: 1px solid #999;
+                    display: block;
+                    padding: 20px;
+                    overflow: auto;
+                }`;
+            document.head.appendChild(style);
+        """)
     else:
         editor.web.eval("""
 					var area = document.getElementById('markdown-area');
