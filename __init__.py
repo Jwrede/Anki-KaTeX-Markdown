@@ -124,6 +124,7 @@ def update():
               "_markdown-it.min.js")
     _add_file(os.path.join(addon_path, "_highlight.css"), "_highlight.css")
     _add_file(os.path.join(addon_path, "_highlight.js"), "_highlight.js")
+    _add_file(os.path.join(addon_path, "_mhchem.js"), "_mhchem.js")
 
     for katex_font in os.listdir(os.path.join(addon_path, "fonts")):
         _add_file(os.path.join(addon_path, "fonts", katex_font), katex_font)
