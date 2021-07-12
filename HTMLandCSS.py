@@ -3,7 +3,6 @@ HTMLforEditor = """
         if(area) area.remove();
         area = document.createElement('markdown-area');
         area.id = 'markdown-area';
-        area.style.background = 'white';
         area.style.display = 'inline-block';
         area.style.overflowY = 'auto';
         area.style.padding = '1%';
