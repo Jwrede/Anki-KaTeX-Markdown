@@ -26,6 +26,7 @@ HTMLforEditor = """
 					getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
 					getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 					getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+					getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"),
 					getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 					getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 				];
@@ -34,7 +35,8 @@ HTMLforEditor = """
 									keyupFunc();
 									document.addEventListener('keyup', keyupFunc);
 				}
-                                Promise.all(getResources).then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js")).then(main);
+
+				Promise.all(getResources).then(main);
 				
 
 				function getScript(path, altURL) {
@@ -138,11 +140,12 @@ front = """
 		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
 		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getResources).then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js")).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
 	function getScript(path, altURL) {
@@ -253,11 +256,12 @@ back = """
 		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
 		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getResources).then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js")).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
 	function getScript(path, altURL) {
@@ -366,11 +370,12 @@ front_cloze = """
 		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
 		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getResources).then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js")).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
 	function getScript(path, altURL) {
@@ -446,7 +451,8 @@ front_cloze = """
 		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
 		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
 		str = str.replace(/<div[^>]*>/gi, "\\n");
-		str = str.replace(/^(?!<span class=cloze>)<?span[^>]*>/gi, "")
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		str.replace(/<\/div[^>]*>/g, "\\n");
 		return replaceHTMLElementsInString(str);
 	}
@@ -472,11 +478,12 @@ back_cloze = """
 		getCSS("_highlight.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css"),
 		getScript("_highlight.js", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"),
 		getScript("_katex.min.js", "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"),
+		getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js"),
 		getScript("_auto-render.js", "https://cdn.jsdelivr.net/gh/Jwrede/Anki-KaTeX-Markdown/auto-render-cdn.js"),
 		getScript("_markdown-it.min.js", "https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js")
 	];
 
-	Promise.all(getResources).then(() => getScript("_mhchem.js", "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/mhchem.min.js")).then(render).catch(show);
+	Promise.all(getResources).then(render).catch(show);
 	
 
 	function getScript(path, altURL) {
@@ -559,7 +566,8 @@ back_cloze = """
 		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
 		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
 		str = str.replace(/<div[^>]*>/gi, "\\n");
-		str = str.replace(/^(?!<span class=cloze>)<?span[^>]*>/gi, "")
+		// Thanks Graham A!
+		str = str.replace(/<[\/]?span[^>]*>/gi, "")
 		str.replace(/<\/div[^>]*>/g, "\\n");
 		return replaceHTMLElementsInString(str);
 	}
