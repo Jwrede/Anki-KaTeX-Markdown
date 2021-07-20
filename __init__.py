@@ -27,7 +27,6 @@ def markdownPreview(editor):
                     display: block;
                     padding: 20px;
                     overflow: auto;
-                    color: black;
                 }`;
             document.head.appendChild(style);
         """)
