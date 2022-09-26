@@ -12,6 +12,7 @@ jobs:
         run: ls
       
       - name: Pushes ankiaddon to main
+        uses: actions/upload-artifact@v3
         with:
           name: MDKaTeX.ankiaddon
           path: MDKaTeX.ankiaddon
