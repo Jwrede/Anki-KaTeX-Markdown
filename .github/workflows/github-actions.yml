@@ -7,17 +7,28 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v3
       
-      - name: Create ankiaddon
-        run: |
-          ls
-          zip -r -q MDKaTeX.zip MDKaTeX
-          mv MDKaTeX.zip MDKaTeX.ankiaddon
-          ls
+      # - name: Create ankiaddon
+      #   run: |
+      #     ls
+      #     zip -r -q MDKaTeX.zip MDKaTeX
+      #     mv MDKaTeX.zip MDKaTeX.ankiaddon
+      #     ls
       
-      - name: Pushes ankiaddon to main
-        run: |
-          git config --global user.name 'Jwrede'
-          git config --global user.email 'wrede.jonathan00@gmail.com'
-          git add MDKaTeX.ankiaddon
-          git commit -m "created ankiaddon"
-          git push
+      # - name: Pushes ankiaddon to main
+      #   run: |
+      #     git config --global user.name 'Jwrede'
+      #     git config --global user.email 'wrede.jonathan00@gmail.com'
+      #     git add MDKaTeX.ankiaddon
+      #     git commit -m "created ankiaddon"
+      #     git push
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
