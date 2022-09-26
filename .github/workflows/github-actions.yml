@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
-      - run: >
-          zip -r MDKaTeX.zip MDKaTeX
-          mv MDKaTeX.zip MDKaTeX.ankiaddon
+      - run: ls
+      - run: zip -r -q MDKaTeX.zip MDKaTeX
+      - run: mv MDKaTeX.zip MDKaTeX.ankiaddon
+      - run: ls
