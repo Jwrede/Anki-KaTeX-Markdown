@@ -4,7 +4,14 @@ jobs:
   To-Ankiaddon:
     runs-on: ubuntu-latest
     steps:
-      - run: ls
-      - run: zip -r -q MDKaTeX.zip MDKaTeX
-      - run: mv MDKaTeX.zip MDKaTeX.ankiaddon
-      - run: ls
+      - name: Creates ankiaddon 
+        uses: actions/checkout@v3
+        run: ls
+        run: zip -r -q MDKaTeX.zip MDKaTeX
+        run: mv MDKaTeX.zip MDKaTeX.ankiaddon
+        run: ls
+      
+      - name: Pushes ankiaddon to main
+        with:
+          name: MDKaTeX.ankiaddon
+          path: MDKaTeX.ankiaddon
