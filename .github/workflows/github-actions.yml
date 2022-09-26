@@ -14,17 +14,10 @@ jobs:
           mv MDKaTeX.zip MDKaTeX.ankiaddon
           ls
       
-      # - name: Pushes ankiaddon to main
-      #   run: |
-      #     git config --global user.name 'Jwrede'
-      #     git config --global user.email 'wrede.jonathan00@gmail.com'
-      #     git add MDKaTeX.ankiaddon
-      #     git commit -m "created ankiaddon"
-      #     git push
-
-      - name: Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "MDKaTeX.ankiaddon"
-          token: ${{ secrets.YOUR_GITHUB_TOKEN }}
-
+      - name: Pushes ankiaddon to main
+        run: |
+          git config --global user.name 'Jwrede'
+          git config --global user.email 'wrede.jonathan00@gmail.com'
+          git add MDKaTeX.ankiaddon
+          git commit -m "created ankiaddon"
+          git push
