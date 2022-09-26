@@ -1,0 +1,8 @@
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  To-Ankiaddon:
+    runs-on: ubuntu-latest
+    steps:
+      - run: zip -r -q MDKaTeX.zip MDKaTeX
+      - run: mv MDKaTeX.zip MDKaTeX.ankiaddon
