@@ -14,10 +14,12 @@ jobs:
           mv MDKaTeX.zip MDKaTeX.ankiaddon
           ls
       
-      - name: Pushes ankiaddon to main
-        run: |
-          git config --global user.name 'Jwrede'
-          git config --global user.email 'wrede.jonathan00@gmail.com'
-          git add MDKaTeX.ankiaddon
-          git commit -m "created ankiaddon"
-          git push
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MDKaTeX.ankiaddon
+          asset_name: MDKaTeX.ankiaddon
+          asset_content_type: application/gzip
