@@ -6,10 +6,11 @@ jobs:
     steps:
       - name: Creates ankiaddon 
         uses: actions/checkout@v3
-        run: ls
-        run: zip -r -q MDKaTeX.zip MDKaTeX
-        run: mv MDKaTeX.zip MDKaTeX.ankiaddon
-        run: ls
+        run: |
+          ls
+          zip -r -q MDKaTeX.zip MDKaTeX
+          mv MDKaTeX.zip MDKaTeX.ankiaddon
+          ls
       
       - name: Pushes ankiaddon to main
         uses: actions/upload-artifact@v3
