@@ -1,16 +1,17 @@
-from aqt import mw
-from aqt.utils import showInfo
-from anki.hooks import addHook
-import anki
 import os
 import shutil
+
 from .HTMLandCSS import HTMLforEditor, front, back, front_cloze, back_cloze, css
+from aqt import mw
+from anki.hooks import addHook
+import anki
 
 MODEL_NAME = 'KaTeX and Markdown'
 CONF_NAME = 'MDKATEX'
 
 
 def markdownPreview(editor):
+    """ This function runs when the user opens the editor, creates the markdown preview area """
     if editor.note.model()["name"] in [MODEL_NAME + " Basic", MODEL_NAME + " Cloze"]:
         editor.web.eval(HTMLforEditor)
         editor.web.eval("""
@@ -30,7 +31,7 @@ def markdownPreview(editor):
                 }`;
             document.head.appendChild(style);
         """)
-    else:
+    else: # removes the markdown preview
         editor.web.eval("""
 					var area = document.getElementById('markdown-area');
 					if(area) area.remove();
@@ -41,9 +42,12 @@ addHook("loadNote", markdownPreview)
 
 
 def create_model_if_necessacy():
+    """ 
+    Runs when the user opens Anki, creates the two card types and also handles updating
+    the card types CSS and HTML if the addon has a pending update
+    """
     model = mw.col.models.byName(MODEL_NAME + " Basic")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
-    m = mw.col.models
 
     if not model:
         create_model()
@@ -54,6 +58,7 @@ def create_model_if_necessacy():
 
 
 def create_model():
+    """ Creates the Basic Card type """
     m = mw.col.models
     model = m.new(MODEL_NAME + " Basic")
 
@@ -74,6 +79,7 @@ def create_model():
 
 
 def create_model_cloze():
+    """ Creates the Cloze Card type """
     m = mw.col.models
     model = m.new(MODEL_NAME + " Cloze")
     model["type"] = anki.consts.MODEL_CLOZE
@@ -95,6 +101,7 @@ def create_model_cloze():
 
 
 def update():
+    """ Updates the card types the addon has a pending update """
     model = mw.col.models.byName(MODEL_NAME + " Basic")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
 
@@ -125,7 +132,8 @@ def update():
     _add_file(os.path.join(addon_path, "_highlight.css"), "_highlight.css")
     _add_file(os.path.join(addon_path, "_highlight.js"), "_highlight.js")
     _add_file(os.path.join(addon_path, "_mhchem.js"), "_mhchem.js")
-    _add_file(os.path.join(addon_path, "_markdown-it-mark.js"), "_markdown-it-mark.js")
+    _add_file(os.path.join(addon_path, "_markdown-it-mark.js"),
+              "_markdown-it-mark.js")
 
     for katex_font in os.listdir(os.path.join(addon_path, "fonts")):
         _add_file(os.path.join(addon_path, "fonts", katex_font), katex_font)

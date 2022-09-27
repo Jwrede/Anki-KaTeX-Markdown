@@ -1,3 +1,5 @@
+""" This file contains all the HTML / CSS strings for the different card types """
+
 HTMLforEditor = """
         var area = document.getElementById('markdown-area');
         if(area) area.remove();
