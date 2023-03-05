@@ -646,6 +646,6 @@ pre code {
 }
 
 .cloze {
-	color: lightblue;
+	color: #42C0FB;
 }
 """
