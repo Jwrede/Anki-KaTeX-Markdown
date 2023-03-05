@@ -120,7 +120,7 @@ HTMLforEditor = """
 					str = str.replace(/<div[^>]*>/gi, "\\n");
 					// Thanks Graham A!
 					str = str.replace(/<[\/]?span[^>]*>/gi, "")
-					str.replace(/<\/div[^>]*>/g, "\\n");
+					str = str.replace(/<\/div[^>]*>/g, "\\n");
 					return replaceHTMLElementsInString(str);
 				}
 
