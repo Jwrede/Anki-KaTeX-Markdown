@@ -230,7 +230,7 @@ front = """
 		str = str.replace(/<div[^>]*>/gi, "\\n");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		str.replace(/<\/div[^>]*>/g, "\\n");
+		str = str.replace(/<\/div[^>]*>/g, "\\n");
 		return replaceHTMLElementsInString(str);
 	}
 
@@ -347,7 +347,7 @@ back = """
 		str = str.replace(/<div[^>]*>/gi, "\\n");
 		// Thanks Graham A!
 		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		str.replace(/<\/div[^>]*>/g, "\\n");
+		str = str.replace(/<\/div[^>]*>/g, "\\n");
 		return replaceHTMLElementsInString(str);
 	}
 
@@ -392,6 +392,27 @@ front_cloze = """
 			script.src = path;
 			document.head.appendChild(script);
 		})
+	}
+
+	function replaceSpan(str) {
+		let tokenized = str.split(/(<span.*?>|<\/span>)/g);
+		let isCloze = false;
+		tokenized = tokenized.map((element, idx) => {
+			if (element.includes("<span class='cloze'>") || element.includes('<span class="cloze">')) {
+			isCloze = true;
+			return "<span class='cloze'>";
+		} else if (isCloze && element.includes("</span>")) {
+			isCloze = false;
+			return "</span>";	
+		} else if (element.includes("<span")) {
+			return "";
+		} else if (element.includes("</span>")) {
+			return "";
+		} else {
+			return element;
+		}
+		});
+		return tokenized.join("");
 	}
 
 	function getCSS(path, altURL) {
@@ -452,8 +473,8 @@ front_cloze = """
 		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
 		str = str.replace(/<div[^>]*>/gi, "\\n");
 		// Thanks Graham A!
-		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		str.replace(/<\/div[^>]*>/g, "\\n");
+		str = replaceSpan(str)
+		str = str.replace(/<\/div[^>]*>/g, "\\n");
 		return replaceHTMLElementsInString(str);
 	}
 
@@ -499,6 +520,27 @@ back_cloze = """
 			script.src = path;
 			document.head.appendChild(script);
 		})
+	}
+
+	function replaceSpan(str) {
+		let tokenized = str.split(/(<span.*?>|<\/span>)/g);
+		let isCloze = false;
+		tokenized = tokenized.map((element, idx) => {
+			if (element.includes("<span class='cloze'>") || element.includes('<span class="cloze">')) {
+			isCloze = true;
+			return "<span class='cloze'>";
+		} else if (isCloze && element.includes("</span>")) {
+			isCloze = false;
+			return "</span>";	
+		} else if (element.includes("<span")) {
+			return "";
+		} else if (element.includes("</span>")) {
+			return "";
+		} else {
+			return element;
+		}
+		});
+		return tokenized.join("");
 	}
 
 	function getCSS(path, altURL) {
@@ -566,8 +608,8 @@ back_cloze = """
 		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
 		str = str.replace(/<div[^>]*>/gi, "\\n");
 		// Thanks Graham A!
-		str = str.replace(/<[\/]?span[^>]*>/gi, "")
-		str.replace(/<\/div[^>]*>/g, "\\n");
+		str = replaceSpan(str)
+		str = str.replace(/<\/div[^>]*>/g, "\\n");
 		return replaceHTMLElementsInString(str);
 	}
 
@@ -597,10 +639,13 @@ table, th, td {
 	visibility: hidden;
 }
 pre code {
-  background-color: #eee;
   border: 1px solid #999;
   display: block;
   padding: 20px;
   overflow: auto;
+}
+
+.cloze {
+	color: lightblue;
 }
 """
