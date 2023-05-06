@@ -12,6 +12,7 @@ HTMLforEditor = """
         area.style.width = '98%';
         area.style.height = '100%';
 
+        var fields = document.getElementById('fields').children;
         if (fields !== null) {
 			keyupFunc = function() {
 				var text = '# Field 1\\n' + fields.children[0].children[1].shadowRoot.children[2].innerHTML;
