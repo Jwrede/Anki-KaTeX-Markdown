@@ -12,15 +12,27 @@ HTMLforEditor = """
         area.style.width = '98%';
         area.style.height = '100%';
 
-        var fields = document.getElementById('fields').children;
+        if (fields !== null) {
+			keyupFunc = function() {
+				var text = '# Field 1\\n' + fields.children[0].children[1].shadowRoot.children[2].innerHTML;
+				text += "\\n# Field 2\\n" + fields.children[1].children[1].shadowRoot.children[2].innerHTML;
+				render(text);
+			}
 
-        keyupFunc = function() {
-            var text = '# Field 1\\n' + fields[0].children[1].shadowRoot.children[2].innerHTML;
-            text += "\\n# Field 2\\n" + fields[1].children[1].shadowRoot.children[2].innerHTML;
-            render(text);
-        }
+			document.body.appendChild(area);
+		}
+        
+        else {
+			var fields = document.getElementsByClassName('fields')[0];
+        
+			keyupFunc = function() {
+				var text = '# Field 1\\n' + fields.children[0].getElementsByClassName("rich-text-editable")[0].shadowRoot.children[2].innerHTML;
+				text += "\\n# Field 2\\n" + fields.children[1].getElementsByClassName("rich-text-editable")[0].shadowRoot.children[2].innerHTML;
+				render(text);
+			}
 
-        document.body.appendChild(area);
+			fields.appendChild(area);
+		}
 
 
         var getResources = [

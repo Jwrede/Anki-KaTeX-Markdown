@@ -105,16 +105,17 @@ def update():
     model = mw.col.models.byName(MODEL_NAME + " Basic")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
 
-    model['tmpls'][0]['qfmt'] = front
-    model['tmpls'][0]['afmt'] = back
-    model['css'] = css
+    # Commented out since I don't want to overwrite the user's individual changes right now
+    # model['tmpls'][0]['qfmt'] = front
+    # model['tmpls'][0]['afmt'] = back
+    # model['css'] = css
 
-    model_cloze['tmpls'][0]['qfmt'] = front_cloze
-    model_cloze['tmpls'][0]['afmt'] = back_cloze
-    model_cloze['css'] = css
+    # model_cloze['tmpls'][0]['qfmt'] = front_cloze
+    # model_cloze['tmpls'][0]['afmt'] = back_cloze
+    # model_cloze['css'] = css
 
-    mw.col.models.save(model)
-    mw.col.models.save(model_cloze)
+    # mw.col.models.save(model)
+    # mw.col.models.save(model_cloze)
 
     if os.path.isdir(os.path.join(mw.col.media.dir(), "_katex")):
         shutil.rmtree(os.path.join(mw.col.media.dir(), "_katex"))
