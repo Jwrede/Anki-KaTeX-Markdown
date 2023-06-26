@@ -102,27 +102,45 @@ HTMLforEditor = """
 				}
 
 
-				function renderMath(text) {
+				function renderMath(ID) {
+					let text = document.getElementById(ID).innerHTML;
 					text = replaceInString(text);
-					area.textContent = text;
-					renderMathInElement(area, {
+
+           			     	// replace "$" inside code block to prevent rendering errors
+             			   	text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+               			 		const replacedCodeContent = codeContent.replace(/\$/g, "&dollar;");
+             			   		return `\`\`\`${replacedCodeContent}\`\`\``;
+              			  	});
+
+					document.getElementById(ID).textContent = text;
+					renderMathInElement(document.getElementById(ID), {
 						delimiters:  [
-								{left: "$$", right: "$$", display: true},
-								{left: "$", right: "$", display: false}
+  							{left: "$$", right: "$$", display: true},
+  							{left: "$", right: "$", display: false}
 						],
-															throwOnError : false
+            					throwOnError : false
 					});
+   
+   					// arendering the math, restore the "$" inside the code block
+   					text = document.getElementById(ID).innerHTML
+   					text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+      						const replacedCodeContent = codeContent.replace("&amp;dollar;", "$");
+      						return `\`\`\`${replacedCodeContent}\`\`\``;
+    					});
+
+   					document.getElementById(ID).innerHTML = text
 				}
+    
 				function markdown() {
 					let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
-																	if (lang && hljs.getLanguage(lang)) {
-																			try {
-																					return hljs.highlight(str, { language: lang }).value;
-																			} catch (__) {}
-																	}
+							if (lang && hljs.getLanguage(lang)) {
+								try {
+									return hljs.highlight(str, { language: lang }).value;
+								} catch (__) {}
+							}
 
-																	return ''; // use external default escaping
-															}}).use(markdownItMark);
+							return ''; // use external default escaping
+						}}).use(markdownItMark);
 					text = replaceHTMLElementsInString(area.innerHTML);
 					text = md.render(text);
 					area.innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
@@ -213,14 +231,30 @@ front = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+
+                // replace "$" inside code block to prevent rendering errors
+                text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+                	const replacedCodeContent = codeContent.replace(/\$/g, "&dollar;");
+                	return `\`\`\`${replacedCodeContent}\`\`\``;
+                });
+
 		document.getElementById(ID).textContent = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
-            throwOnError : false
+            		throwOnError : false
 		});
+   
+   		// arendering the math, restore the "$" inside the code block
+   		text = document.getElementById(ID).innerHTML
+   		text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+      			const replacedCodeContent = codeContent.replace("&amp;dollar;", "$");
+      			return `\`\`\`${replacedCodeContent}\`\`\``;
+    		});
+
+   		document.getElementById(ID).innerHTML = text
 	}
 
 	function markdown(ID) {
@@ -331,15 +365,32 @@ back = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+
+                // replace "$" inside code block to prevent rendering errors
+                text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+                	const replacedCodeContent = codeContent.replace(/\$/g, "&dollar;");
+                	return `\`\`\`${replacedCodeContent}\`\`\``;
+                });
+
 		document.getElementById(ID).textContent = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
-                        throwOnError : false
+            		throwOnError : false
 		});
+   
+   		// arendering the math, restore the "$" inside the code block
+   		text = document.getElementById(ID).innerHTML
+   		text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+      			const replacedCodeContent = codeContent.replace("&amp;dollar;", "$");
+      			return `\`\`\`${replacedCodeContent}\`\`\``;
+    		});
+
+   		document.getElementById(ID).innerHTML = text
 	}
+ 
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
                             if (lang && hljs.getLanguage(lang)) {
@@ -354,6 +405,7 @@ back = """
 		text = md.render(text);
 		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
 	}
+ 
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
 		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
@@ -434,18 +486,36 @@ front_cloze = """
 	function show() {
 		document.getElementById("front").style.visibility = "visible";
 	}
+ 
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+
+                // replace "$" inside code block to prevent rendering errors
+                text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+                	const replacedCodeContent = codeContent.replace(/\$/g, "&dollar;");
+                	return `\`\`\`${replacedCodeContent}\`\`\``;
+                });
+
 		document.getElementById(ID).textContent = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
-                        throwOnError : false
+            		throwOnError : false
 		});
+   
+   		// arendering the math, restore the "$" inside the code block
+   		text = document.getElementById(ID).innerHTML
+   		text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+      			const replacedCodeContent = codeContent.replace("&amp;dollar;", "$");
+      			return `\`\`\`${replacedCodeContent}\`\`\``;
+    		});
+
+   		document.getElementById(ID).innerHTML = text
 	}
+ 
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
                             if (lang && hljs.getLanguage(lang)) {
@@ -460,6 +530,7 @@ front_cloze = """
 		text = md.render(text);
 		document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi,"\\\\");
 	}
+ 
 	function replaceInString(str) {
 		str = str.replace(/<[\/]?pre[^>]*>/gi, "");
 		str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
@@ -551,15 +622,32 @@ back_cloze = """
 	function renderMath(ID) {
 		let text = document.getElementById(ID).innerHTML;
 		text = replaceInString(text);
+
+                // replace "$" inside code block to prevent rendering errors
+                text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+                	const replacedCodeContent = codeContent.replace(/\$/g, "&dollar;");
+                	return `\`\`\`${replacedCodeContent}\`\`\``;
+                });
+
 		document.getElementById(ID).textContent = text;
 		renderMathInElement(document.getElementById(ID), {
 			delimiters:  [
   				{left: "$$", right: "$$", display: true},
   				{left: "$", right: "$", display: false}
 			],
-                        throwOnError : false
+            		throwOnError : false
 		});
+   
+   		// arendering the math, restore the "$" inside the code block
+   		text = document.getElementById(ID).innerHTML
+   		text = text.replace(/```(.*?)```/msg, (match, codeContent) => {
+      			const replacedCodeContent = codeContent.replace("&amp;dollar;", "$");
+      			return `\`\`\`${replacedCodeContent}\`\`\``;
+    		});
+
+   		document.getElementById(ID).innerHTML = text
 	}
+ 
 	function markdown(ID) {
 		let md = new markdownit({typographer: true, html:true, highlight: function (str, lang) {
                             if (lang && hljs.getLanguage(lang)) {
