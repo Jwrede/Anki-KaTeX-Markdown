@@ -6,15 +6,19 @@ from aqt import mw
 from anki.hooks import addHook
 import anki
 
-MODEL_NAME = 'KaTeX and Markdown'
-CONF_NAME = 'MDKATEX'
+MODEL_NAME = "KaTeX and Markdown (color)"
+CONF_NAME = "MDKATEX"
 
 
 def markdownPreview(editor):
-    """ This function runs when the user opens the editor, creates the markdown preview area """
-    if editor.note.model()["name"] in [MODEL_NAME + " Basic", MODEL_NAME + " Cloze"]:
+    """This function runs when the user opens the editor, creates the markdown preview area"""
+    if editor.note.model()["name"] in [
+        MODEL_NAME + " Basic",
+        MODEL_NAME + " Cloze",
+    ]:
         editor.web.eval(HTMLforEditor)
-        editor.web.eval("""
+        editor.web.eval(
+            """
             var style = document.createElement('style');
             style.type = 'text/css';
             style.innerText = `
@@ -30,24 +34,27 @@ def markdownPreview(editor):
                     overflow: auto;
                 }`;
             document.head.appendChild(style);
-        """)
-    else: # removes the markdown preview
-        editor.web.eval("""
+        """
+        )
+    else:  # removes the markdown preview
+        editor.web.eval(
+            """
 					var area = document.getElementById('markdown-area');
 					if(area) area.remove();
-        """)
+        """
+        )
 
 
 addHook("loadNote", markdownPreview)
 
 
 def create_model_if_necessacy():
-    """ 
+    """
     Runs when the user opens Anki, creates the two card types and also handles updating
     the card types CSS and HTML if the addon has a pending update
     """
-    model = mw.col.models.byName(MODEL_NAME + " Basic")
-    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
+    model = mw.col.models.byName(MODEL_NAME + " Basic New")
+    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze New")
 
     if not model:
         create_model()
@@ -58,7 +65,7 @@ def create_model_if_necessacy():
 
 
 def create_model():
-    """ Creates the Basic Card type """
+    """Creates the Basic Card type"""
     m = mw.col.models
     model = m.new(MODEL_NAME + " Basic")
 
@@ -69,9 +76,9 @@ def create_model():
     m.addField(model, field)
 
     template = m.newTemplate(MODEL_NAME + " Basic")
-    template['qfmt'] = front
-    template['afmt'] = back
-    model['css'] = css
+    template["qfmt"] = front
+    template["afmt"] = back
+    model["css"] = css
 
     m.addTemplate(model, template)
     m.add(model)
@@ -79,7 +86,7 @@ def create_model():
 
 
 def create_model_cloze():
-    """ Creates the Cloze Card type """
+    """Creates the Cloze Card type"""
     m = mw.col.models
     model = m.new(MODEL_NAME + " Cloze")
     model["type"] = anki.consts.MODEL_CLOZE
@@ -91,9 +98,9 @@ def create_model_cloze():
     m.addField(model, field)
 
     template = m.newTemplate(MODEL_NAME + " Cloze")
-    template['qfmt'] = front_cloze
-    template['afmt'] = back_cloze
-    model['css'] = css
+    template["qfmt"] = front_cloze
+    template["afmt"] = back_cloze
+    model["css"] = css
 
     m.addTemplate(model, template)
     m.add(model)
@@ -101,7 +108,7 @@ def create_model_cloze():
 
 
 def update():
-    """ Updates the card types the addon has a pending update """
+    """Updates the card types the addon has a pending update"""
     model = mw.col.models.byName(MODEL_NAME + " Basic")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
 
@@ -128,13 +135,11 @@ def update():
     _add_file(os.path.join(addon_path, "_katex.min.js"), "_katex.min.js")
     _add_file(os.path.join(addon_path, "_katex.css"), "_katex.css")
     _add_file(os.path.join(addon_path, "_auto-render.js"), "_auto-render.js")
-    _add_file(os.path.join(addon_path, "_markdown-it.min.js"),
-              "_markdown-it.min.js")
+    _add_file(os.path.join(addon_path, "_markdown-it.min.js"), "_markdown-it.min.js")
     _add_file(os.path.join(addon_path, "_highlight.css"), "_highlight.css")
     _add_file(os.path.join(addon_path, "_highlight.js"), "_highlight.js")
     _add_file(os.path.join(addon_path, "_mhchem.js"), "_mhchem.js")
-    _add_file(os.path.join(addon_path, "_markdown-it-mark.js"),
-              "_markdown-it-mark.js")
+    _add_file(os.path.join(addon_path, "_markdown-it-mark.js"), "_markdown-it-mark.js")
 
     for katex_font in os.listdir(os.path.join(addon_path, "fonts")):
         _add_file(os.path.join(addon_path, "fonts", katex_font), katex_font)
