@@ -10,7 +10,9 @@ jobs:
       - name: Create ankiaddon
         run: |
           ls
-          zip -r -q MDKaTeX.zip MDKaTeX
+          cd MDKaTeX
+          zip -r -q ../MDKaTeX.zip ./*
+          cd ..
           mv MDKaTeX.zip MDKaTeX.ankiaddon
           ls
       
