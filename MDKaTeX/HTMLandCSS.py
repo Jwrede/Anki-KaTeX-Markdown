@@ -376,7 +376,7 @@ back = """
 
 front_cloze = """
 
-<div id="front"><pre>{{cloze:Text}}</pre></div>
+<div id="cloze">{{cloze:Text}}</div>
 
 <script>
 	var getResources = [
@@ -503,7 +503,7 @@ front_cloze = """
 
 back_cloze = """
 
-<div id="back"><pre>{{cloze:Text}}</pre></div><br>
+<div id="cloze">{{cloze:Text}}</div><br>
 <div id="extra"><pre>{{Back Extra}}</pre></div>
 
 <script>

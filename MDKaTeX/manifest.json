@@ -1,0 +1,9 @@
+{
+  "package": "mdkatex",
+  "name": "MDKaTex",
+  "description": "Anki addon for rendering KaTeX in markdown fields",
+  "tags": [
+    "anki",
+    "addon"
+  ]
+}
