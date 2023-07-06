@@ -1,4 +1,5 @@
-<div id="front"><pre>{{cloze:Text}}</pre></div>
+<div id="back"><pre>{{cloze:Text}}</pre></div><br>
+<div id="extra"><pre>{{Back Extra}}</pre></div>
 
 <script>
   var getResources = [
@@ -69,14 +70,21 @@
       document.head.appendChild(css);
     });
   }
+
+
   function render() {
-    renderMath("front");
-    markdown("front");
+    renderMath("back");
+    markdown("back");
+    renderMath("extra");
+    markdown("extra");
     show();
   }
+
   function show() {
-    document.getElementById("front").style.visibility = "visible";
+    document.getElementById("back").style.visibility = "visible";
+    document.getElementById("extra").style.visibility = "visible";
   }
+
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);

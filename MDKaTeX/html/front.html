@@ -1,4 +1,4 @@
-<div id="front"><pre>{{cloze:Text}}</pre></div>
+<div id="front"><pre>{{Front}}</pre></div>
 
 <script>
   var getResources = [
@@ -29,27 +29,6 @@
     })
   }
 
-  function replaceSpan(str) {
-    let tokenized = str.split(/(<span.*?>|<\/span>)/g);
-    let isCloze = false;
-    tokenized = tokenized.map((element, idx) => {
-      if (element.includes("<span class='cloze'>") || element.includes('<span class="cloze">')) {
-        isCloze = true;
-        return "<span class='cloze'>";
-      } else if (isCloze && element.includes("</span>")) {
-        isCloze = false;
-        return "</span>";
-      } else if (element.includes("<span")) {
-        return "";
-      } else if (element.includes("</span>")) {
-        return "";
-      } else {
-        return element;
-      }
-    });
-    return tokenized.join("");
-  }
-
   function getCSS(path, altURL) {
     return new Promise((resolve, reject) => {
       var css = document.createElement('link');
@@ -61,7 +40,7 @@
         css_online.setAttribute('rel', 'stylesheet');
         css_online.type = 'text/css';
         css_online.onload = resolve;
-        css_online.onerror = reject;
+        css.onerror = reject;
         css_online.href = altURL;
         document.head.appendChild(css_online);
       }
@@ -69,14 +48,18 @@
       document.head.appendChild(css);
     });
   }
+
+
   function render() {
     renderMath("front");
     markdown("front");
     show();
   }
+
   function show() {
     document.getElementById("front").style.visibility = "visible";
   }
+
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
@@ -89,6 +72,7 @@
       throwOnError: false
     });
   }
+
   function markdown(ID) {
     let md = new markdownit({
       typographer: true, html: true, highlight: function (str, lang) {
@@ -110,7 +94,7 @@
     str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
     str = str.replace(/<div[^>]*>/gi, "\n");
     // Thanks Graham A!
-    str = replaceSpan(str)
+    str = str.replace(/<[\/]?span[^>]*>/gi, "")
     str = str.replace(/<\/div[^>]*>/g, "\n");
     return replaceHTMLElementsInString(str);
   }

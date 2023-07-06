@@ -1,0 +1,32 @@
+.card {
+  font-family: arial;
+  font-size: 20px;
+  color: black;
+  background-color: white;
+}
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+#front, #back, #extra {
+	visibility: hidden;
+}
+pre code {
+  border: 1px solid #999;
+  display: block;
+  padding: 20px;
+  overflow: auto;
+}
+
+.cloze {
+	color: #42C0FB !important;
+}
+
+.nightMode {
+  background-color: #0f0f0f !important; 
+  color: #c0c0c0 !important;
+}
+
+.nightMode code {
+  filter: invert(20%) sepia(0%) saturate(2000%) hue-rotate(36deg) brightness(150%) contrast(100%) !important;
+}
