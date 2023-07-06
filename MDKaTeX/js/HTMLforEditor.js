@@ -12,8 +12,8 @@ area.style.height = '100%';
 var fields = document.getElementById('fields');
 if (fields !== null) {
   keyupFunc = function () {
-    var text = '# Field 1\\n' + fields.children[0].children[1].shadowRoot.children[2].innerHTML;
-    text += "\\n# Field 2\\n" + fields.children[1].children[1].shadowRoot.children[2].innerHTML;
+    var text = '# Field 1\n' + fields.children[0].children[1].shadowRoot.children[2].innerHTML;
+    text += "\n# Field 2\n" + fields.children[1].children[1].shadowRoot.children[2].innerHTML;
     render(text);
   }
 
@@ -24,8 +24,8 @@ else {
   var fields = document.getElementsByClassName('fields')[0];
 
   keyupFunc = function () {
-    var text = '# Field 1\\n' + fields.children[0].getElementsByClassName("rich-text-editable")[0].shadowRoot.children[2].innerHTML;
-    text += "\\n# Field 2\\n" + fields.children[1].getElementsByClassName("rich-text-editable")[0].shadowRoot.children[2].innerHTML;
+    var text = '# Field 1\n' + fields.children[0].getElementsByClassName("rich-text-editable")[0].shadowRoot.children[2].innerHTML;
+    text += "\n# Field 2\n" + fields.children[1].getElementsByClassName("rich-text-editable")[0].shadowRoot.children[2].innerHTML;
     render(text);
   }
 
@@ -66,6 +66,27 @@ function getScript(path, altURL) {
     script.src = path;
     document.head.appendChild(script);
   })
+}
+
+function replaceSpan(str) {
+  let tokenized = str.split(/(<span.*?>|<\/span>)/g);
+  let isCloze = false;
+  tokenized = tokenized.map((element, idx) => {
+    if (element.includes("<span class='cloze'>") || element.includes('<span class="cloze">')) {
+      isCloze = true;
+      return "<span class='cloze'>";
+    } else if (isCloze && element.includes("</span>")) {
+      isCloze = false;
+      return "</span>";
+    } else if (element.includes("<span")) {
+      return "";
+    } else if (element.includes("</span>")) {
+      return "";
+    } else {
+      return element;
+    }
+  });
+  return tokenized.join("");
 }
 
 function getCSS(path, altURL) {
@@ -124,15 +145,15 @@ function markdown() {
   }).use(markdownItMark);
   text = replaceHTMLElementsInString(area.innerHTML);
   text = md.render(text);
-  area.innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\\\");
+  area.innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
 }
 function replaceInString(str) {
   str = str.replace(/<[\/]?pre[^>]*>/gi, "");
-  str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\\n");
-  str = str.replace(/<div[^>]*>/gi, "\\n");
+  str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
+  str = str.replace(/<div[^>]*>/gi, "\n");
   // Thanks Graham A!
-  str = str.replace(/<[\/]?span[^>]*>/gi, "")
-  str = str.replace(/<\/div[^>]*>/g, "\\n");
+  str = replaceSpan(str)
+  str = str.replace(/<\/div[^>]*>/g, "\n");
   return replaceHTMLElementsInString(str);
 }
 
