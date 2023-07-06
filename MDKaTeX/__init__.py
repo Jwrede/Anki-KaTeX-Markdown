@@ -6,15 +6,15 @@ from aqt import mw
 from anki.hooks import addHook
 import anki
 
-MODEL_NAME = "KaTeX and Markdown (color)"
+MODEL_NAME = "KaTeX and Markdown"
 CONF_NAME = "MDKATEX"
 
 
 def markdownPreview(editor):
     """This function runs when the user opens the editor, creates the markdown preview area"""
     if editor.note.model()["name"] in [
-        MODEL_NAME + " Basic",
-        MODEL_NAME + " Cloze",
+        MODEL_NAME + " Basic (Color)",
+        MODEL_NAME + " Cloze (Color)",
     ]:
         editor.web.eval(HTMLforEditor)
         editor.web.eval(
@@ -53,8 +53,8 @@ def create_model_if_necessacy():
     Runs when the user opens Anki, creates the two card types and also handles updating
     the card types CSS and HTML if the addon has a pending update
     """
-    model = mw.col.models.byName(MODEL_NAME + " Basic New")
-    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze New")
+    model = mw.col.models.byName(MODEL_NAME + " Basic (Color)")
+    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze (Color)")
 
     if not model:
         create_model()
@@ -67,7 +67,7 @@ def create_model_if_necessacy():
 def create_model():
     """Creates the Basic Card type"""
     m = mw.col.models
-    model = m.new(MODEL_NAME + " Basic")
+    model = m.new(MODEL_NAME + " Basic (Color)")
 
     field = m.newField("Front")
     m.addField(model, field)
@@ -75,7 +75,7 @@ def create_model():
     field = m.newField("Back")
     m.addField(model, field)
 
-    template = m.newTemplate(MODEL_NAME + " Basic")
+    template = m.newTemplate(MODEL_NAME + " Basic (Color)")
     template["qfmt"] = front
     template["afmt"] = back
     model["css"] = css
@@ -88,7 +88,7 @@ def create_model():
 def create_model_cloze():
     """Creates the Cloze Card type"""
     m = mw.col.models
-    model = m.new(MODEL_NAME + " Cloze")
+    model = m.new(MODEL_NAME + " Cloze (Color)")
     model["type"] = anki.consts.MODEL_CLOZE
 
     field = m.newField("Text")
@@ -97,7 +97,7 @@ def create_model_cloze():
     field = m.newField("Back Extra")
     m.addField(model, field)
 
-    template = m.newTemplate(MODEL_NAME + " Cloze")
+    template = m.newTemplate(MODEL_NAME + " Cloze (Color)")
     template["qfmt"] = front_cloze
     template["afmt"] = back_cloze
     model["css"] = css
@@ -109,20 +109,20 @@ def create_model_cloze():
 
 def update():
     """Updates the card types the addon has a pending update"""
-    model = mw.col.models.byName(MODEL_NAME + " Basic")
-    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze")
+    model = mw.col.models.byName(MODEL_NAME + " Basic (Color)")
+    model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze (Color)")
 
     # Commented out since I don't want to overwrite the user's individual changes right now
-    # model['tmpls'][0]['qfmt'] = front
-    # model['tmpls'][0]['afmt'] = back
-    # model['css'] = css
+    model["tmpls"][0]["qfmt"] = front
+    model["tmpls"][0]["afmt"] = back
+    model["css"] = css
 
-    # model_cloze['tmpls'][0]['qfmt'] = front_cloze
-    # model_cloze['tmpls'][0]['afmt'] = back_cloze
-    # model_cloze['css'] = css
+    model_cloze["tmpls"][0]["qfmt"] = front_cloze
+    model_cloze["tmpls"][0]["afmt"] = back_cloze
+    model_cloze["css"] = css
 
-    # mw.col.models.save(model)
-    # mw.col.models.save(model_cloze)
+    mw.col.models.save(model)
+    mw.col.models.save(model_cloze)
 
     if os.path.isdir(os.path.join(mw.col.media.dir(), "_katex")):
         shutil.rmtree(os.path.join(mw.col.media.dir(), "_katex"))
