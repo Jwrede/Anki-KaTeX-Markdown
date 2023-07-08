@@ -1,5 +1,9 @@
-<div id="back"><pre>{{cloze:Text}}</pre></div><br>
-<div id="extra"><pre>{{Back Extra}}</pre></div>
+<div id="back">
+  <pre>{{cloze:Text}}</pre>
+</div><br>
+<div id="extra">
+  <pre>{{Back Extra}}</pre>
+</div>
 
 <script>
   var getResources = [
@@ -34,9 +38,9 @@
     let tokenized = str.split(/(<span.*?>|<\/span>)/g);
     let isCloze = false;
     tokenized = tokenized.map((element, idx) => {
-      if (element.includes("<span class='cloze'>") || element.includes('<span class="cloze">')) {
+      if (element.includes("<span class='cloze'") || element.includes('<span class="cloze"')) {
         isCloze = true;
-        return "<span class='cloze'>";
+        return element;
       } else if (isCloze && element.includes("</span>")) {
         isCloze = false;
         return "</span>";
