@@ -37,7 +37,7 @@
     tokenized = tokenized.map((element, idx) => {
       if (element.includes("<span class='cloze'") || element.includes('<span class="cloze"')) {
         isCloze = true;
-        return element;
+        return '<span class="cloze">';
       } else if (isCloze && element.includes("</span>")) {
         isCloze = false;
         return "</span>";
