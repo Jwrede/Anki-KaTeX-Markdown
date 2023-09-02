@@ -132,6 +132,8 @@ function renderMath(text) {
   });
 }
 function markdown() {
+  let element = area;
+  element.innerHTML = element.innerHTML.replaceAll('\\$', '&dollar;');
   let md = new markdownit({
     typographer: true, html: true, highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
@@ -143,9 +145,9 @@ function markdown() {
       return ''; // use external default escaping
     }
   }).use(markdownItMark);
-  text = replaceHTMLElementsInString(area.innerHTML);
+  text = replaceHTMLElementsInString(element.innerHTML);
   text = md.render(text);
-  area.innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
+  element.innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
 }
 function replaceInString(str) {
   str = str.replace(/<[\/]?pre[^>]*>/gi, "");

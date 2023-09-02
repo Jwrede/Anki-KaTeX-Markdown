@@ -103,9 +103,10 @@
   }
   function markdown(ID) {
     // preprocessing
-    // console.log(document.getElementById(ID).getElementsByClassName("cloze"));
-    let backElement = document.getElementById(ID);
-    const clozes = [...backElement.getElementsByClassName("cloze")];
+    let element = document.getElementById(ID);
+    element.innerHTML = element.innerHTML.replaceAll('\\$', '&dollar;');
+    element.innerHTML = replaceInString(element.innerHTML);
+    const clozes = [...element.getElementsByClassName("cloze")];
     for (let i = 0; i < clozes.length; i++) {
       let parentNode = clozes[i].parentNode;
       parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
