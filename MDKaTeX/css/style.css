@@ -23,6 +23,7 @@ pre code {
 
 .cloze {
 	color: #42C0FB !important;
+  display: inline-block;
 }
 
 .nightMode, .night-mode, .night_mode {
