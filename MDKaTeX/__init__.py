@@ -17,25 +17,6 @@ def markdownPreview(editor):
         MODEL_NAME + " Cloze (Color)",
     ]:
         editor.web.eval(HTMLforEditor)
-        editor.web.eval(
-            """
-            var style = document.createElement('style');
-            style.type = 'text/css';
-            style.innerText = `
-                table, th, td {
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                }
-                pre code {
-                    background-color: #eee;
-                    border: 1px solid #999;
-                    display: block;
-                    padding: 20px;
-                    overflow: auto;
-                }`;
-            document.head.appendChild(style);
-        """
-        )
     else:  # removes the markdown preview
         editor.web.eval(
             """
@@ -132,14 +113,17 @@ def update():
 
     addon_path = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 
+    _add_file(os.path.join(addon_path, "css",  "style.css"), "style.css")
     _add_file(os.path.join(addon_path, "_katex.min.js"), "_katex.min.js")
     _add_file(os.path.join(addon_path, "_katex.css"), "_katex.css")
     _add_file(os.path.join(addon_path, "_auto-render.js"), "_auto-render.js")
-    _add_file(os.path.join(addon_path, "_markdown-it.min.js"), "_markdown-it.min.js")
+    _add_file(os.path.join(addon_path, "_markdown-it.min.js"),
+              "_markdown-it.min.js")
     _add_file(os.path.join(addon_path, "_highlight.css"), "_highlight.css")
     _add_file(os.path.join(addon_path, "_highlight.js"), "_highlight.js")
     _add_file(os.path.join(addon_path, "_mhchem.js"), "_mhchem.js")
-    _add_file(os.path.join(addon_path, "_markdown-it-mark.js"), "_markdown-it-mark.js")
+    _add_file(os.path.join(addon_path, "_markdown-it-mark.js"),
+              "_markdown-it-mark.js")
 
     for katex_font in os.listdir(os.path.join(addon_path, "fonts")):
         _add_file(os.path.join(addon_path, "fonts", katex_font), katex_font)

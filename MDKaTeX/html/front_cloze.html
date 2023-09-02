@@ -82,7 +82,7 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    document.getElementById(ID).textContent = text;
+    document.getElementById(ID).innerHtml = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
         { left: "$$", right: "$$", display: true },
@@ -92,6 +92,14 @@
     });
   }
   function markdown(ID) {
+    // preprocessing
+    let frontElement = document.getElementById(ID);
+    const clozes = [...frontElement.getElementsByClassName("cloze")];
+    for (let i = 0; i < clozes.length; i++) {
+      let parentNode = clozes[i].parentNode;
+      parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
+    }
+    // markdown
     let md = new markdownit({
       typographer: true, html: true, highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -103,9 +111,16 @@
         return ''; // use external default escaping
       }
     }).use(markdownItMark);
-    let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+
+    text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
     text = md.render(text);
-    document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
+    // post processing
+    while (text.includes("REPLACE_ME_ANKI")) {
+      text = text.replace(
+        "REPLACE_ME_ANKI",
+        clozes.shift().outerHTML);
+    }
+    document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "</span>");
   }
   function replaceInString(str) {
     str = str.replace(/<[\/]?pre[^>]*>/gi, "");
