@@ -74,7 +74,7 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    text = text.replaceAll('\\$', '\\&dollar;');
+    text = text.replaceAll('\\$', 'DOLLAR_REPLACE_ANKI');
     document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
@@ -98,8 +98,8 @@
       }
     }).use(markdownItMark);
     let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
-    text = text.replaceAll('\\$', '&dollar;');
     text = md.render(text);
+    text = text.replaceAll('DOLLAR_REPLACE_ANKI', '$');
     document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
   }
   function replaceInString(str) {
