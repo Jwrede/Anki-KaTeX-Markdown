@@ -116,6 +116,7 @@
       let parentNode = clozes[i].parentNode;
       parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
     }
+    // render
     text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
     text = md.render(text);
     // post processing

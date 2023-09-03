@@ -34,3 +34,7 @@ pre code {
 .nightMode code {
   filter: invert(20%) sepia(0%) saturate(2000%) hue-rotate(36deg) brightness(150%) contrast(100%) !important;
 }
+
+.katex-display {
+  width: 100vw;
+}
