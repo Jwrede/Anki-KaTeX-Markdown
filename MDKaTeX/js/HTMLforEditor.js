@@ -122,7 +122,7 @@ function show() {
 
 function renderMath(text) {
   text = replaceInString(text);
-  text = text.replaceAll('\\$', 'DOLLAR_REPLACE_ANKI');
+  text = text.replaceAll('\\$', '⛳');
   area.textContent = text;
   renderMathInElement(area, {
     delimiters: [
@@ -160,7 +160,7 @@ function markdown() {
   // render
   text = replaceHTMLElementsInString(element.innerHTML);
   text = md.render(text);
-  text = text.replaceAll('DOLLAR_REPLACE_ANKI', '$');
+  text = text.replaceAll('⛳', '$');
   // post processing
   for (let i = 0; i < clozes.length; i++) {
     text = text.replace("REPLACE_ME_ANKI", clozes[i].outerHTML);

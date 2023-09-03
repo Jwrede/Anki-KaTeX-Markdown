@@ -82,7 +82,7 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    text = text.replaceAll('\\$', 'DOLLAR_REPLACE_ANKI');
+    text = text.replaceAll('\\$', '⛳');
     document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
@@ -119,11 +119,11 @@
     // render
     text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
     text = md.render(text);
-    text = text.replaceAll('DOLLAR_REPLACE_ANKI', '$');
     // post processing
     for (let i = 0; i < clozes.length; i++) {
       text = text.replace("REPLACE_ME_ANKI", clozes[i].outerHTML);
     }
+    text = text.replaceAll('⛳', '$');
     document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "</span>");
   }
 
