@@ -23,6 +23,7 @@ pre code {
 
 .cloze {
 	color: #42C0FB !important;
+  display: inline-block;
 }
 
 .nightMode, .night-mode, .night_mode {
@@ -32,4 +33,8 @@ pre code {
 
 .nightMode code {
   filter: invert(20%) sepia(0%) saturate(2000%) hue-rotate(36deg) brightness(150%) contrast(100%) !important;
+}
+
+.katex-display {
+  width: 100vw;
 }

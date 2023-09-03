@@ -82,7 +82,8 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    document.getElementById(ID).innerHtml = text;
+    text = text.replaceAll('\\$', '&dollar;');
+    document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
         { left: "$$", right: "$$", display: true },
@@ -91,17 +92,9 @@
       throwOnError: false
     });
   }
+
   function markdown(ID) {
-    // preprocessing
-    let element = document.getElementById(ID);
-    element.innerHTML = element.innerHTML.replaceAll('\\$', '&dollar;');
-    element.innerHTML = replaceInString(element.innerHTML);
-    const clozes = [...element.getElementsByClassName("cloze")];
-    for (let i = 0; i < clozes.length; i++) {
-      let parentNode = clozes[i].parentNode;
-      parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
-    }
-    // markdown
+    // setup markdown
     let md = new markdownit({
       typographer: true, html: true, highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -114,22 +107,31 @@
       }
     }).use(markdownItMark);
 
+    // preprocessing
+    let element = document.getElementById(ID);
+    const clozes = [...element.getElementsByClassName("cloze")];
+    for (let i = 0; i < clozes.length; i++) {
+      clozes[i].innerHTML = md.render(clozes[i].innerHTML).
+        replace(/<p>|<\/p>/gi, "").replace(/<pre>/gi, "<pre class='cloze'>")
+      let parentNode = clozes[i].parentNode;
+      parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
+    }
+    // render
     text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
     text = md.render(text);
     // post processing
-    while (text.includes("REPLACE_ME_ANKI")) {
-      text = text.replace(
-        "REPLACE_ME_ANKI",
-        clozes.shift().outerHTML);
+    for (let i = 0; i < clozes.length; i++) {
+      text = text.replace("REPLACE_ME_ANKI", clozes[i].outerHTML);
     }
     document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "</span>");
   }
+
   function replaceInString(str) {
     str = str.replace(/<[\/]?pre[^>]*>/gi, "");
     str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
     str = str.replace(/<div[^>]*>/gi, "\n");
     // Thanks Graham A!
-    str = replaceSpan(str)
+    // str = replaceSpan(str)
     str = str.replace(/<\/div[^>]*>/g, "\n");
     return replaceHTMLElementsInString(str);
   }

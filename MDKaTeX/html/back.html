@@ -1,8 +1,12 @@
-<div id="front"><pre>{{Front}}</pre></div>
+<div id="front">
+  <pre>{{Front}}</pre>
+</div>
 
 <hr id=answer>
 
-<div id="back"><pre>{{Back}}</pre></div>
+<div id="back">
+  <pre>{{Back}}</pre>
+</div>
 
 <script>
   var getResources = [
@@ -70,7 +74,8 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    document.getElementById(ID).textContent = text;
+    text = text.replaceAll('\\$', '&dollar;');
+    document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
         { left: "$$", right: "$$", display: true },
@@ -79,6 +84,7 @@
       throwOnError: false
     });
   }
+
   function markdown(ID) {
     let md = new markdownit({
       typographer: true, html: true, highlight: function (str, lang) {

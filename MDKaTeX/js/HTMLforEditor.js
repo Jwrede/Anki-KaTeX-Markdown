@@ -122,6 +122,7 @@ function show() {
 
 function renderMath(text) {
   text = replaceInString(text);
+  text = text.replaceAll('\\$', '&dollar;');
   area.textContent = text;
   renderMathInElement(area, {
     delimiters: [
@@ -131,9 +132,11 @@ function renderMath(text) {
     throwOnError: false
   });
 }
+
+
 function markdown() {
   let element = area;
-  element.innerHTML = element.innerHTML.replaceAll('\\$', '&dollar;');
+  // setup markdown
   let md = new markdownit({
     typographer: true, html: true, highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
@@ -145,16 +148,30 @@ function markdown() {
       return ''; // use external default escaping
     }
   }).use(markdownItMark);
+
+  // preprocessing
+  const clozes = [...element.getElementsByClassName("cloze")];
+  for (let i = 0; i < clozes.length; i++) {
+    clozes[i].innerHTML = md.render(clozes[i].innerHTML).
+      replace(/<p>|<\/p>/gi, "").replace(/<pre>/gi, "<pre class='cloze'>")
+    let parentNode = clozes[i].parentNode;
+    parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
+  }
+  // render
   text = replaceHTMLElementsInString(element.innerHTML);
   text = md.render(text);
-  element.innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
+  // post processing
+  for (let i = 0; i < clozes.length; i++) {
+    text = text.replace("REPLACE_ME_ANKI", clozes[i].outerHTML);
+  }
+  element.innerHTML = text.replace(/&lt;\/span&gt;/gi, "</span>");
 }
+
 function replaceInString(str) {
   str = str.replace(/<[\/]?pre[^>]*>/gi, "");
   str = str.replace(/<br\s*[\/]?[^>]*>/gi, "\n");
   str = str.replace(/<div[^>]*>/gi, "\n");
   // Thanks Graham A!
-  str = replaceSpan(str)
   str = str.replace(/<\/div[^>]*>/g, "\n");
   return replaceHTMLElementsInString(str);
 }

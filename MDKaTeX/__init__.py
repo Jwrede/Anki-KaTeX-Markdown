@@ -93,7 +93,6 @@ def update():
     model = mw.col.models.byName(MODEL_NAME + " Basic (Color)")
     model_cloze = mw.col.models.byName(MODEL_NAME + " Cloze (Color)")
 
-    # Commented out since I don't want to overwrite the user's individual changes right now
     model["tmpls"][0]["qfmt"] = front
     model["tmpls"][0]["afmt"] = back
     model["css"] = css

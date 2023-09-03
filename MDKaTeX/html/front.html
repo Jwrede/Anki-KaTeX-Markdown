@@ -65,7 +65,8 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    document.getElementById(ID).textContent = text;
+    text = text.replaceAll('\\$', '&dollar;');
+    document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
         { left: "$$", right: "$$", display: true },
