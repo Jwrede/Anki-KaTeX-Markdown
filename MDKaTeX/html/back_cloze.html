@@ -72,6 +72,7 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
+    text = text.replaceAll('\\$', '&dollar;');
     document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
@@ -98,7 +99,6 @@
 
     // preprocessing
     let element = document.getElementById(ID);
-    element.innerHTML = element.innerHTML.replaceAll('\\$', '&dollar;');
     const clozes = [...element.getElementsByClassName("cloze")];
     for (let i = 0; i < clozes.length; i++) {
       clozes[i].innerHTML = md.render(clozes[i].innerHTML).

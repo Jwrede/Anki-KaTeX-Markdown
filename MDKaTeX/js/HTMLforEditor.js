@@ -122,6 +122,7 @@ function show() {
 
 function renderMath(text) {
   text = replaceInString(text);
+  text = text.replaceAll('\\$', '&dollar;');
   area.textContent = text;
   renderMathInElement(area, {
     delimiters: [
@@ -149,7 +150,6 @@ function markdown() {
   }).use(markdownItMark);
 
   // preprocessing
-  element.innerHTML = element.innerHTML.replaceAll('\\$', '&dollar;');
   const clozes = [...element.getElementsByClassName("cloze")];
   for (let i = 0; i < clozes.length; i++) {
     clozes[i].innerHTML = md.render(clozes[i].innerHTML).
