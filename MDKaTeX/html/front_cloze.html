@@ -82,7 +82,7 @@
   function renderMath(ID) {
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
-    text = text.replaceAll('\\$', '&dollar;');
+    text = text.replaceAll('\\$', '\\&dollar;');
     document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
@@ -118,6 +118,7 @@
     }
     // render
     text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
+    text = text.replaceAll('\\$', '&dollar;');
     text = md.render(text);
     // post processing
     for (let i = 0; i < clozes.length; i++) {

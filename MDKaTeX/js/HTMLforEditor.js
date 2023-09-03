@@ -122,7 +122,7 @@ function show() {
 
 function renderMath(text) {
   text = replaceInString(text);
-  text = text.replaceAll('\\$', '&dollar;');
+  text = text.replaceAll('\\$', '\\&dollar;');
   area.textContent = text;
   renderMathInElement(area, {
     delimiters: [
@@ -159,6 +159,7 @@ function markdown() {
   }
   // render
   text = replaceHTMLElementsInString(element.innerHTML);
+  text = text.replaceAll('\\$', '&dollar;');
   text = md.render(text);
   // post processing
   for (let i = 0; i < clozes.length; i++) {
