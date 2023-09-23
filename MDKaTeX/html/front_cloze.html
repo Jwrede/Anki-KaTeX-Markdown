@@ -83,6 +83,7 @@
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
     text = text.replaceAll('\\$', '⛳');
+    text = text.replaceAll('\\:', '🉐');
     document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
@@ -124,6 +125,7 @@
       text = text.replace("REPLACE_ME_ANKI", clozes[i].outerHTML);
     }
     text = text.replaceAll('⛳', '$');
+    text = text.replaceAll('🉐', ':');
     document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "</span>");
   }
 
