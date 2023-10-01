@@ -1,12 +1,22 @@
 # Anki-KaTeX-Markdown (Reworked)
 
-Fork of : https://github.com/Jwrede/Anki-KaTeX-Markdown. Special Thanks to [Jwrede](https://github.com/Jwrede).
+Fork of : https://github.com/Jwrede/Anki-KaTeX-Markdown. Special Thanks to [Jwrede](https://github.com/Jwrede) for starting this project.
+
 Adding support and improvements of how cards are displayed.
 Allowing for clozes inside code blocks. Better night mode support & readability. Coloring of the cloze elements. 
 
 Creates a new Basic and a new Cloze Note Type that support Markdown and KaTeX: *Markdown and KaTeX Basic (Color)* and *Markdown and KaTeX Cloze (Color)*.
+```md
+# Markdown and KaTex {{c1::plugin}}
+```js
+console.log("{{c2::Markdown}}");
+``‎`
+$\sum_{i=0}^ni$
 
+{{c3::$\sum_{i=0}^ni$}}
+```
 ![](https://github.com/alexthillen/Anki-KaTeX-Markdown-Reworked/blob/main/example-cloze-color.gif)
+
 
 ## Features
 <ul>
