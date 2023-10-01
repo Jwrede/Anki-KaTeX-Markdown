@@ -26,6 +26,10 @@ pre code {
   display: inline-block;
 }
 
+.cloze-inactive {
+  display: inline-block;
+}
+
 .nightMode, .night-mode, .night_mode {
   background-color: #0f0f0f !important; 
   color: #c0c0c0 !important;

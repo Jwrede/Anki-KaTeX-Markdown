@@ -115,14 +115,25 @@
       clozes[i].innerHTML = md.render(clozes[i].innerHTML).
         replace(/<p>|<\/p>/gi, "").replace(/<pre>/gi, "<pre class='cloze'>")
       let parentNode = clozes[i].parentNode;
-      parentNode.replaceChild(document.createTextNode("REPLACE_ME_ANKI"), clozes[i]);
+      parentNode.replaceChild(document.createTextNode("REPLACE_ME_CLOZE"), clozes[i]);
+    }
+    //
+    const inactiveClozes = [...element.getElementsByClassName("cloze-inactive")];
+    for (let i = 0; i < inactiveClozes.length; i++) {
+      inactiveClozes[i].innerHTML = md.render(inactiveClozes[i].innerHTML).
+        replace(/<p>|<\/p>/gi, "")
+      let parentNode = inactiveClozes[i].parentNode;
+      parentNode.replaceChild(document.createTextNode("REPLACE_ME_INACTIVE_CLOZE"), inactiveClozes[i]);
     }
     // render
     text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
     text = md.render(text);
     // post processing
     for (let i = 0; i < clozes.length; i++) {
-      text = text.replace("REPLACE_ME_ANKI", clozes[i].outerHTML);
+      text = text.replace("REPLACE_ME_CLOZE", clozes[i].outerHTML);
+    }
+    for (let i = 0; i < inactiveClozes.length; i++) {
+      text = text.replace("REPLACE_ME_INACTIVE_CLOZE", inactiveClozes[i].outerHTML);
     }
     text = text.replaceAll('⛳', '$');
     text = text.replaceAll('🉐', ':');

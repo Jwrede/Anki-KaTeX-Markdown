@@ -68,27 +68,6 @@ function getScript(path, altURL) {
   })
 }
 
-function replaceSpan(str) {
-  let tokenized = str.split(/(<span.*?>|<\/span>)/g);
-  let isCloze = false;
-  tokenized = tokenized.map((element, idx) => {
-    if (element.includes("<span class='cloze'>") || element.includes('<span class="cloze">')) {
-      isCloze = true;
-      return "<span class='cloze'>";
-    } else if (isCloze && element.includes("</span>")) {
-      isCloze = false;
-      return "</span>";
-    } else if (element.includes("<span")) {
-      return "";
-    } else if (element.includes("</span>")) {
-      return "";
-    } else {
-      return element;
-    }
-  });
-  return tokenized.join("");
-}
-
 function getCSS(path, altURL) {
   return new Promise((resolve, reject) => {
     var css = document.createElement('link');
