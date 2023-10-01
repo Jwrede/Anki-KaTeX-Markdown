@@ -32,7 +32,7 @@ $\sum_{i=0}^ni$
 <a href="https://github.com/KaTeX/KaTeX">KaTeX</a>
 
 ## Installation
-* Go to 
-<a href="https://ankiweb.net/shared/info/1087328706"><img src="https://preview.redd.it/fka0b5cc48t41.png?auto=webp&s=c26da98dca2863e1d0dddbfd59b5bea6165f4bcb" width="24"></a>
+* Go to
+<a href="https://ankiweb.net/shared/info/1786114227"><img src="https://preview.redd.it/fka0b5cc48t41.png?auto=webp&s=c26da98dca2863e1d0dddbfd59b5bea6165f4bcb" width="24"></a>
 to see how to install this addon for anki
 * To install locally download the latest [release](https://github.com/Jwrede/Anki-KaTeX-Markdown/releases) and install by opening **Anki → Tools → Add-ons → Install** from file, then select **MDKaTeX.ankiaddon**
