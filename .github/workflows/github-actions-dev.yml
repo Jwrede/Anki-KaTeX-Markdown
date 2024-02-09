@@ -1,0 +1,27 @@
+name: GitHub Actions Dev 
+on: 
+  push:
+    branches:
+      - "!master" # Excludes "master" branch
+      - "**"
+jobs:
+  To-Ankiaddon:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v3
+      
+      - name: Create ankiaddon
+        run: |
+          ls
+          cd MDKaTeX
+          zip -r -q ../MDKaTeX.zip ./*
+          cd ..
+          mv MDKaTeX.zip MDKaTeX.ankiaddon
+          ls
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: MDKaTeX.ankiaddon
+          path: ./MDKaTeX.ankiaddon
