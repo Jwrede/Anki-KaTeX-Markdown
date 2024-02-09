@@ -75,6 +75,7 @@
     let text = document.getElementById(ID).innerHTML;
     text = replaceInString(text);
     text = text.replaceAll('\\$', '⛳');
+    text = text.replaceAll('\\:', '🉐');
     document.getElementById(ID).innerHTML = text;
     renderMathInElement(document.getElementById(ID), {
       delimiters: [
@@ -99,7 +100,9 @@
     }).use(markdownItMark);
     let text = replaceHTMLElementsInString(document.getElementById(ID).innerHTML);
     text = md.render(text);
+    text = restoreHTMLElementsInString(text);
     text = text.replaceAll('⛳', '$');
+    text = text.replaceAll('🉐', ':');
     document.getElementById(ID).innerHTML = text.replace(/&lt;\/span&gt;/gi, "\\");
   }
   function replaceInString(str) {
@@ -112,11 +115,37 @@
     return replaceHTMLElementsInString(str);
   }
 
+  replacementElements = [
+    { from: "\\<", to: "➿", is_plaintext: true },
+    { from: "\\>", to: "➰", is_plaintext: true },
+    { from: "&amp;", to: "&" },
+    { from: "&nbsp;", to: " " },
+    { from: "&tab;", to: "	" },
+  ];
+
+  restoreElements = [
+    { from: "➿", to: "<", is_plaintext: true },
+    { from: "➰", to: ">", is_plaintext: true },
+    { from: "&amp;", to: "&", is_plaintext: true },
+    { from: "&amp;lt;", to: "&lt;", is_plaintext: true },
+    { from: "&amp;gt;", to: "&gt;", is_plaintext: true },
+  ];
+
   function replaceHTMLElementsInString(str) {
-    str = str.replace(/&nbsp;/gi, " ");
-    str = str.replace(/&tab;/gi, "	");
-    str = str.replace(/&gt;/gi, ">");
-    str = str.replace(/&lt;/gi, "<");
-    return str.replace(/&amp;/gi, "&");
+    for (let i = 0; i < replacementElements.length; i++) {
+      if (replacementElements[i].is_plaintext) {
+        str = str.replaceAll(replacementElements[i].from, replacementElements[i].to);
+      } else {
+        str = str.replace(new RegExp(replacementElements[i].from, "gi"), replacementElements[i].to);
+      }
+    }
+    return str;
+  }
+
+  function restoreHTMLElementsInString(str) {
+    for (let i = 0; i < restoreElements.length; i++) {
+      str = str.replace(new RegExp(restoreElements[i].from, "gi"), restoreElements[i].to);
+    }
+    return str;
   }
 </script>
