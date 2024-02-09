@@ -2,7 +2,7 @@ name: GitHub Actions Dev
 on: 
   push:
     branches:
-      - "!master" # Excludes "master" branch
+      - "!main" # Excludes "master" branch
       - "**"
 jobs:
   To-Ankiaddon:
