@@ -6,7 +6,7 @@ Allowing for clozes inside code blocks. Better night mode support & readability.
 
 Creates a new Basic and a new Cloze Note Type that support Markdown and KaTeX: *Markdown and KaTeX Basic (Color)* and *Markdown and KaTeX Cloze (Color)*.
 
-The following can be used to create a sample cloze card (remove the "\" before the backticks).
+The following can be used to create a sample cloze card (remove the "\\" before the backticks).
 
 ```md
 # A Dummy Card

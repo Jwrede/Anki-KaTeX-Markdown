@@ -2,8 +2,8 @@ name: GitHub Actions Dev
 on: 
   push:
     branches:
-      - "!main" # Excludes "master" branch
       - "**"
+      - "!main" 
 jobs:
   To-Ankiaddon:
     runs-on: ubuntu-latest
