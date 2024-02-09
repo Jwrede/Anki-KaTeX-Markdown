@@ -1,5 +1,6 @@
 # Anki Markdown
 
+[Download Anki Add-On](https://ankiweb.net/shared/info/1786114227)
 
 Adding support and improvements of how cards are displayed.
 Allowing for clozes inside code blocks. Better night mode support & readability. Coloring of the cloze elements. 
