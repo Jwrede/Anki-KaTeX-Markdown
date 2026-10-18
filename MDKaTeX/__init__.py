@@ -130,6 +130,10 @@ def update():
     _add_file(os.path.join(addon_path, "_auto-render.js"), "_auto-render.js")
     _add_file(os.path.join(addon_path, "_markdown-it.min.js"),
               "_markdown-it.min.js")
+    # Replace the stylesheet so existing collections get style fixes (night mode)
+    highlight_css = os.path.join(mw.col.media.dir(), "_highlight.css")
+    if os.path.isfile(highlight_css):
+        os.remove(highlight_css)
     _add_file(os.path.join(addon_path, "_highlight.css"), "_highlight.css")
     _add_file(os.path.join(addon_path, "_highlight.js"), "_highlight.js")
     _add_file(os.path.join(addon_path, "_mhchem.js"), "_mhchem.js")
